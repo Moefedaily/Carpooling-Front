@@ -9,10 +9,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#5e3429",
-        secondary: "#fef3c7",
-        teratery: "#bb7d45",
-        bg: "#f0e7d5",
+        primary: "#4E2B63",
+        secondary: "#595959",
+        teratery: "#F5F5F5",
+        subTitle: "#7E7E7E",
+        bg: "#F5F5F5",
+        bgHero: "#EDEEED",
+        nav: "#D3D3D3",
         fooHeader: "#bc560a",
         "button-start": "#5e3429",
         "button-end": "#a5623a",

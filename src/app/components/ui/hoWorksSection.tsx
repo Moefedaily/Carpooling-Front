@@ -3,20 +3,20 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 
 const HowItWorksSection = () => {
   return (
-    <div className="bg-gray-100 py-16">
+    <div className="bg-white py-16">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-primary font-montserrat mb-12">
-          HOW WEEGOO WORKS
+        <h2 className="text-3xl font-bold text-center text-secondary font-montserrat mb-12">
+          HOW <span className="text-primary">WEEGOO</span> WORKS
         </h2>
         <div className="relative">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="bg-gray-300 rounded-full w-64 h-64 flex items-center justify-center">
               <Image
-                src="/car-image.jpg"
+                src="/hoWorksSection.png"
                 alt="Car image"
                 width={200}
                 height={200}
-                className="rounded-full"
+                className="rounded-full shadow-sm"
               />
             </div>
           </div>
@@ -63,16 +63,18 @@ const HowItWorksSection = () => {
                   <div
                     className={`absolute top-0 ${
                       index % 2 === 0 ? "right-0" : "left-0"
-                    }   border-2 border-primary font-roboto rounded-full w-8 h-8 flex items-center justify-center`}
+                    }   border-4 border-teratery bg-gradient-to-r from-primary to-secondary font-roboto rounded-full w-12 h-12 flex items-center justify-center mb-4`}
                   >
-                    <span className="text-button-end font-bold">
+                    <span className="font-bold text-3xl text-teratery text-center font-roboto">
                       {step.number}
                     </span>
                   </div>
-                  <h3 className="text-lg font-semibold text-primary font-roboto mb-2">
+                  <h3 className="text-lg font-semibold text-secondary font-roboto my-2">
                     {step.title}
                   </h3>
-                  <p className="text-sm text-gray-600">{step.description}</p>
+                  <p className="text-base text-secondary font-roboto font-light">
+                    {step.description}
+                  </p>
                 </div>
               </div>
             ))}

@@ -11,7 +11,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="bg-bg font-roboto">
       <Header />
-      <Hero title="Find your next destination" image="/hero-image.jpg" />
+      <Hero title="Home Page" image="/hero-image.jpg" fullHeight />
       <SearchForm />
       <SaveMoneySection />
       <HowItWorksSection />

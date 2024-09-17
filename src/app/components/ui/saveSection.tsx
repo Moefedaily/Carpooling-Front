@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const SaveMoneySection = () => {
   return (
-    <div className="bg-white py-16">
+    <div className="bg-white py-20">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-8 md:mb-0 md:pr-8">
@@ -18,7 +18,7 @@ const SaveMoneySection = () => {
             <h2 className="text-3xl font-bold text-primary mb-4 font-montserrat">
               Save money on your fuel!
             </h2>
-            <p className="text-button-end font-roboto mb-6">
+            <p className="text-secondary text-base font-light font-roboto mb-6">
               Join thousands of users who are already saving money and reducing
               their carbon footprint. Whether you're commuting to work or
               planning a weekend getaway, <br />
@@ -28,7 +28,7 @@ const SaveMoneySection = () => {
               </span>{" "}
               has got you covered.
             </p>
-            <button className="px-4 py-2 font-bold text-bg bg-primary rounded-md hover:bg-button-end focus:outline-none focus:ring-2 focus:ring-button-start">
+            <button className="px-4 py-2 font-bold text-bg bg-gradient-to-r from-primary to-secondary rounded-md hover:bg-teratery focus:outline-none focus:ring-2 focus:ring-primary">
               Post a Ride
             </button>
           </div>

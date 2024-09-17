@@ -16,21 +16,21 @@ export default function Nav() {
   };
 
   return (
-    <nav className="absolute top-0 left-0 right-0 z-20 mt-4">
-      <div className="container mx-auto flex justify-between items-center py-4 px-8 bg-teratery bg-opacity-20 rounded-full">
+    <nav className="absolute top-0 left-0 right-0 z-20 ">
+      <div className="flex justify-between items-center py-6 px-10 bg-nav bg-opacity-30 rounded-md">
         <div>
           <Link
             href="/"
-            className="text-bg text-xl font-extrabold font-merriweather"
+            className="text-primary text-xl font-extrabold font-merriweather"
           >
-            WeeGoo
+            WEEGOO
           </Link>
         </div>
         <ul className="flex space-x-4 font-merriweather font-medium">
           <li>
             <Link
               href="/user"
-              className="text-bg font-bold hover:text-button-end"
+              className="text-secondary font-bold hover:text-primary"
             >
               About US
             </Link>
@@ -38,7 +38,7 @@ export default function Nav() {
           <li>
             <Link
               href="/contact"
-              className="text-bg font-bold hover:text-button-end"
+              className="text-secondary font-bold hover:text-primary"
             >
               Contact Us
             </Link>
@@ -49,20 +49,20 @@ export default function Nav() {
                 <li>
                   <Link
                     href="/pages/driver"
-                    className="text-bg font-bold hover:text-button-end flex items-center"
+                    className="text-secondary font-bold hover:text-primary flex items-center"
                   >
                     <span>Become a Driver</span>
-                    <IoMdCar className="text-bg ml-2" />
+                    <IoMdCar className="text-primary ml-2" />
                   </Link>
                 </li>
               )}
               <li>
                 <button
                   onClick={handleLogout}
-                  className="text-bg font-bold hover:text-button-end flex items-center"
+                  className="text-secondary font-bold hover:text-primary flex items-center"
                 >
                   <span>Logout</span>
-                  <IoIosLogOut className="text-bg ml-2" />
+                  <IoIosLogOut className="text-primary ml-2" />
                 </button>
               </li>
             </>
@@ -70,7 +70,7 @@ export default function Nav() {
             <li>
               <Link
                 href="/login"
-                className="text-bg font-bold hover:text-button-end flex items-center"
+                className="text-secondary font-bold hover:text-primary flex items-center"
               >
                 <span>Login</span>
                 <IoIosLogIn className="text-bg ml-2" />
