@@ -13,6 +13,7 @@ export const login = async (
     const response = await api.post<AuthResponse>("/auth/login", credentials);
     if (response.data.success && response.data.data.accessToken) {
       localStorage.setItem("token", response.data.data.accessToken);
+      console.log(JSON.stringify(response.data.data));
       return response.data;
     } else {
       throw new Error(response.data.message || "Login failed");
@@ -42,6 +43,7 @@ export const getUser = () => {
   if (token) {
     const base64Url = token.split(".")[1];
     const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    //console.log("user " + JSON.stringify((JSON.parse(window.atob(base64)))));
     return JSON.parse(window.atob(base64));
   }
   return null;

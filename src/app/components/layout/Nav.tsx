@@ -20,7 +20,7 @@ export default function Nav() {
       <div className="flex justify-between items-center py-6 px-10 bg-nav bg-opacity-30 rounded-md">
         <div>
           <Link
-            href="/"
+            href="/pages/home"
             className="text-primary text-xl font-extrabold font-merriweather"
           >
             WEEGOO
@@ -48,7 +48,7 @@ export default function Nav() {
               {user && !user.isVerifiedDriver && (
                 <li>
                   <Link
-                    href="/pages/driver"
+                    href="/pages/driver/register"
                     className="text-secondary font-bold hover:text-primary flex items-center"
                   >
                     <span>Become a Driver</span>
@@ -69,7 +69,7 @@ export default function Nav() {
           ) : (
             <li>
               <Link
-                href="/login"
+                href="/pages/login"
                 className="text-secondary font-bold hover:text-primary flex items-center"
               >
                 <span>Login</span>

@@ -16,9 +16,9 @@ export default function Login() {
     try {
       const res = await login(data);
       toast.success("Login Successful");
-      // setTimeout(() => {
-      //   push("/dashboard");
-      // }, 900);
+      setTimeout(() => {
+        push("/pages/home");
+      }, 900);
     } catch (error) {
       toast.error("Login failed. Please check your credentials.");
     }
@@ -38,9 +38,9 @@ export default function Login() {
           <h2 className="text-2xl font-bold mb-6 text-center text-primary">
             Sign in to your account
           </h2>
-          <Form 
-            fields={fields} 
-            onSubmit={handleLogin} 
+          <Form
+            fields={fields}
+            onSubmit={handleLogin}
             submitButtonText="Sign in"
           />
         </div>
