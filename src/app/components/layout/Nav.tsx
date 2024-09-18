@@ -17,7 +17,7 @@ export default function Nav() {
 
   return (
     <nav className="absolute top-0 left-0 right-0 z-20 ">
-      <div className="flex justify-between items-center py-6 px-10 bg-nav bg-opacity-30 rounded-md">
+      <div className="flex justify-between items-center py-6 px-10 bg-nav bg-opacity-60 rounded-md">
         <div>
           <Link
             href="/pages/home"
@@ -30,7 +30,7 @@ export default function Nav() {
           <li>
             <Link
               href="/user"
-              className="text-secondary font-bold hover:text-primary"
+              className="text-primary font-bold hover:text-secondary"
             >
               About US
             </Link>
@@ -38,7 +38,7 @@ export default function Nav() {
           <li>
             <Link
               href="/contact"
-              className="text-secondary font-bold hover:text-primary"
+              className="text-primary font-bold hover:text-secondary"
             >
               Contact Us
             </Link>
@@ -49,7 +49,7 @@ export default function Nav() {
                 <li>
                   <Link
                     href="/pages/driver/register"
-                    className="text-secondary font-bold hover:text-primary flex items-center"
+                    className="text-primary font-bold hover:text-secondary flex items-center"
                   >
                     <span>Become a Driver</span>
                     <IoMdCar className="text-primary ml-2" />
@@ -59,7 +59,7 @@ export default function Nav() {
               <li>
                 <button
                   onClick={handleLogout}
-                  className="text-secondary font-bold hover:text-primary flex items-center"
+                  className="text-primary font-bold hover:text-secondary flex items-center"
                 >
                   <span>Logout</span>
                   <IoIosLogOut className="text-primary ml-2" />
@@ -70,7 +70,7 @@ export default function Nav() {
             <li>
               <Link
                 href="/pages/login"
-                className="text-secondary font-bold hover:text-primary flex items-center"
+                className="text-primary font-bold hover:text-secondary flex items-center"
               >
                 <span>Login</span>
                 <IoIosLogIn className="text-bg ml-2" />
