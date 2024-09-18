@@ -8,6 +8,7 @@ import Hero from "@/app/components/layout/Hero";
 import Footer from "@/app/components/layout/Footer";
 import { LoginCredentials } from "@/Utils/types/user";
 import Form from "@/app/components/ui/form";
+import Link from "next/link";
 
 export default function Login() {
   const { push } = useRouter();
@@ -43,6 +44,14 @@ export default function Login() {
             onSubmit={handleLogin}
             submitButtonText="Sign in"
           />
+          <div className="mt-4 text-center">
+            <Link
+              href="/pages/auth/requestPassword"
+              className="text-primary hover:underline"
+            >
+              Forgot your password?
+            </Link>
+          </div>
         </div>
       </div>
       <Footer />

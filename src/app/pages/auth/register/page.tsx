@@ -17,7 +17,7 @@ export default function Register() {
       const res = await register(data);
       toast.success("Registration Successful");
       setTimeout(() => {
-        push("/login");
+        push("/pages/auth/login");
       }, 900);
     } catch (error) {
       toast.error("Registration failed. Please try again.");

@@ -63,3 +63,46 @@ export const registerAsDriver = async (
   const response = await api.post(`/auth/register-as-driver`, licenseData);
   return response.data;
 };
+
+export const requestPasswordReset = async (
+  email: string
+): Promise<AuthResponse> => {
+  try {
+    const response = await api.post<AuthResponse>(
+      "/auth/request-password-reset",
+      { email }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      "An unexpected error occurred during password reset request"
+    );
+  }
+};
+
+export const resetPassword = async (
+  token: string,
+  newPassword: string
+): Promise<AuthResponse> => {
+  try {
+    const response = await api.post<AuthResponse>("/auth/reset-password", {
+      token,
+      newPassword,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error("An unexpected error occurred during password reset");
+  }
+};
+
+export const confirmEmail = async (token: string): Promise<AuthResponse> => {
+  try {
+    const response = await api.get<AuthResponse>(
+      `/auth/confirm-email?token=${token}`
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error("An unexpected error occurred during email confirmation");
+  }
+};
