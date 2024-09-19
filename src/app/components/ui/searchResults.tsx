@@ -20,6 +20,7 @@ const SearchResults: React.FC = () => {
   const [sortBy, setSortBy] = useState("earliest");
   const [startingTime, setStartingTime] = useState("");
   const [filteredTrips, setFilteredTrips] = useState<Trip[]>([]);
+  const { push } = useRouter();
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -88,6 +89,9 @@ const SearchResults: React.FC = () => {
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartingTime(e.target.value);
   };
+  const handleTripSelect = (tripId: number) => {
+    push(`/pages/trip/details/${tripId}`);
+  };
 
   return (
     <div className="container mx-auto py-8">
@@ -129,7 +133,11 @@ const SearchResults: React.FC = () => {
 
       <div className="space-y-4">
         {filteredTrips.map((trip) => (
-          <TripCard key={trip.id} trip={trip} />
+          <TripCard
+            key={trip.id}
+            trip={trip}
+            onSelect={() => handleTripSelect(trip.id)}
+          />
         ))}
       </div>
 

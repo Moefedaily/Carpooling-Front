@@ -1,9 +1,16 @@
 import React from "react";
 import { TripCardProps } from "@/Utils/types/trip";
 
-const TripCard: React.FC<TripCardProps> = ({ trip }) => {
+const TripCard: React.FC<TripCardProps> = ({ trip, onSelect }) => {
+  const handleClick = () => {
+    console.log("TripCard clicked", trip.id);
+    onSelect(trip.id);
+  };
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 flex items-center">
+    <div
+      className="bg-white rounded-lg shadow-md p-4 flex items-center"
+      onClick={handleClick}
+    >
       <div className="flex-shrink-0 mr-4"></div>
       <div className="flex-grow">
         <div className="flex justify-between items-center mb-2">
@@ -23,9 +30,7 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
       </div>
       <div className="flex-shrink-0 ml-4">
         <span className="font-bold text-lg">{trip.pricePerSeat}€</span>
-        <button className="ml-4 bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-full hover:bg-opacity-90 transition duration-300">
-          Book
-        </button>
+       
       </div>
     </div>
   );

@@ -57,17 +57,18 @@ export interface TripFilters {
 }
 
 export interface SearchData {
-  
   departureLocation: string;
   arrivalLocation: string;
   departureDate: string;
   numberOfPassengers: string;
-  }
+}
 export interface JoinTripData {
   numberOfSeats: number;
+  tripId: number;
 }
 export interface TripCardProps {
   trip: Trip;
+  onSelect: (tripId: number) => void;
 }
 
 export interface Reservation {

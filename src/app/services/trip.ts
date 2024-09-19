@@ -73,15 +73,18 @@ export const TripService = {
     return response.data;
   },
 
-  joinTrip: async (
-    id: number,
-    joinData: JoinTripData
-  ): Promise<{ trip: Trip; reservation: Reservation }> => {
-    const response = await api.post<{ trip: Trip; reservation: Reservation }>(
-      `/trips/${id}/join`,
-      joinData
-    );
-    return response.data;
+  joinTrip: async (tripId: number, numberOfSeats: number) => {
+    console.log("Joining trip with data:", { tripId, numberOfSeats });
+    try {
+      const response = await api.post(`/trips/${tripId}/join`, {
+        numberOfSeats,
+      });
+      console.log("Join trip response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error joining trip:", error);
+      throw error;
+    }
   },
 
   leaveTrip: async (id: number): Promise<Trip> => {
