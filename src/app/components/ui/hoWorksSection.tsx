@@ -16,7 +16,7 @@ const HowItWorksSection = () => {
                 alt="Car image"
                 width={200}
                 height={200}
-                className="rounded-full shadow-sm"
+                className="rounded-full"
               />
             </div>
           </div>
@@ -63,7 +63,7 @@ const HowItWorksSection = () => {
                   <div
                     className={`absolute top-0 ${
                       index % 2 === 0 ? "right-0" : "left-0"
-                    }   border-4 border-teratery bg-gradient-to-r from-primary to-secondary font-roboto rounded-full w-12 h-12 flex items-center justify-center mb-4`}
+                    }   bg-gradient-to-r from-primary to-secondary font-roboto rounded-full w-12 h-12 flex items-center justify-center mb-4`}
                   >
                     <span className="font-bold text-3xl text-teratery text-center font-roboto">
                       {step.number}

@@ -81,9 +81,8 @@ export const TripService = {
       });
       console.log("Join trip response:", response.data);
       return response.data;
-    } catch (error) {
-      console.error("Error joining trip:", error);
-      throw error;
+    } catch (error: AxiosError<any> | any) {
+      throw new Error(error.response.message || "Failed to create reservation");
     }
   },
 

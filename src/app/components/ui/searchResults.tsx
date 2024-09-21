@@ -94,23 +94,27 @@ const SearchResults: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="bg-white rounded-lg shadow-md p-4 mb-8">
+    <div className="container mx-auto py-6 px-4 max-w-3xl">
+      <div className="bg-white rounded-lg shadow-md p-4 mb-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Search Results</h2>
+          <h2 className="text-2xl font-bold text-secondary font-montserrat">
+            Search Results
+          </h2>
           <div className="flex items-center">
-            <span className="mr-2">Sort by:</span>
+            <span className="mr-2  text-gray-600 font-roboto text-bold">
+              Sort by:
+            </span>
             {sortOptions.map((option) => (
               <label
                 key={option.value}
-                className="inline-flex items-center mr-4"
+                className="inline-flex items-center mr-4 text-base text-secondary font-roboto"
               >
                 <input
                   type="radio"
                   value={option.value}
                   checked={sortBy === option.value}
                   onChange={() => handleSortChange(option.value)}
-                  className="form-radio text-primary"
+                  className="form-radio "
                 />
                 <span className="ml-2">{option.label}</span>
               </label>
@@ -118,20 +122,25 @@ const SearchResults: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center">
-          <label className="inline-flex items-center">
+          <label className="inline-flex items-center text-base font-roboto text-secondary">
             <span className="mr-2">Starting time:</span>
             <input
               type="time"
               value={startingTime}
               onChange={handleTimeChange}
-              className="form-input"
+              className=" text-lg font-roboto text-primary "
             />
           </label>
-          <span className="ml-4">Trips: {filteredTrips.length}</span>
+          <span className="ml-4 text-base text-secondary font-roboto">
+            Trips found:{" "}
+            <span className="text-lg font-roboto text-primary">
+              {filteredTrips.length}
+            </span>
+          </span>
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {filteredTrips.map((trip) => (
           <TripCard
             key={trip.id}
@@ -142,7 +151,7 @@ const SearchResults: React.FC = () => {
       </div>
 
       {filteredTrips.length > 0 && (
-        <div className="mt-8 text-center">
+        <div className="mt-6 text-center">
           <button className="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2 rounded-full hover:bg-opacity-90 transition duration-300">
             Load more
           </button>

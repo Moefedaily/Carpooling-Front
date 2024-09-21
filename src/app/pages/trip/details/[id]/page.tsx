@@ -1,28 +1,26 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { TripService } from "@/app/services/trip";
 import { Trip } from "@/Utils/types/trip";
 import Header from "@/app/components/layout/Header";
 import Hero from "@/app/components/layout/Hero";
 import Footer from "@/app/components/layout/Footer";
-import {
-  FaMapMarkerAlt,
-  FaInfoCircle,
-  FaUser,
-  FaEnvelope,
-} from "react-icons/fa";
+import { FaMapMarkerAlt, FaInfoCircle } from "react-icons/fa";
 import { Oval } from "react-loader-spinner";
 import { format, parseISO } from "date-fns";
-import { BiEnvelopeOpen } from "react-icons/bi";
 
 const TripDetailsPage = () => {
   const params = useParams();
+  const { push } = useRouter();
   const id = params.id as string;
   const [trip, setTrip] = useState<Trip | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [seats, setSeats] = useState(1);
+  const [reservationStatus, setReservationStatus] = useState<
+    "idle" | "processing" | "error"
+  >("idle");
 
   useEffect(() => {
     const fetchTripDetails = async () => {
@@ -40,10 +38,22 @@ const TripDetailsPage = () => {
 
   const handleReserve = async () => {
     try {
-      const reservation = await TripService.joinTrip(Number(id), seats);
-      console.log("Reservation created:", reservation);
+      setReservationStatus("processing");
+      const response = await TripService.joinTrip(Number(id), seats);
+      if (!response || !response.reservation || !response.reservation.id) {
+        throw new Error(
+          "Failed to create reservation: No reservation ID returned"
+        );
+      }
+      push(`/pages/payment/${response.reservation.id}`);
     } catch (err) {
-      setError("Failed to create reservation");
+      console.error("Error in handleReserve:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to create reservation"
+      );
+      setReservationStatus("error");
+    } finally {
+      setReservationStatus("idle");
     }
   };
 
@@ -80,12 +90,14 @@ const TripDetailsPage = () => {
         />
       </div>
     );
+
   if (error)
     return (
       <div className="flex justify-center items-center h-screen text-red font-montserrat font-lg">
         {error}
       </div>
     );
+
   if (!trip)
     return (
       <div className="flex justify-center items-center h-screen text-primary font-montserrat font-lg">
@@ -99,12 +111,12 @@ const TripDetailsPage = () => {
       <Hero title="Trip Details" image="/trip-details-hero.jpg" />
       <div className="container mx-auto py-8">
         <h2 className="text-2xl font-bold mb-6 text-center text-primary">
-          {formatDate(trip.departureDate)}{" "}
+          {formatDate(trip.departureDate)}
         </h2>
         <div className="max-w-2xl mx-auto space-y-6">
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <div className="relative pl-16">
-              <div className="absolute left-12 top-2 bottom-2 w-0.5 bg-gray-300"></div>{" "}
+              <div className="absolute left-12 top-2 bottom-2 w-0.5 bg-gray-300"></div>
               <div className="mb-16 relative">
                 <div className="absolute left-[-5.5rem] top-1 text-sm text-gray-600 w-16 text-right">
                   {trip.departureTime}
@@ -112,7 +124,7 @@ const TripDetailsPage = () => {
                 <div className="absolute -left-[1.55rem] -top-[1rem] bg-white rounded-full">
                   <FaMapMarkerAlt className="text-primary text-xl" />
                 </div>
-                <div className=" text-base font-roboto text-secondary">
+                <div className="text-base font-roboto text-secondary">
                   {trip.departureLocation}
                 </div>
               </div>
@@ -123,7 +135,7 @@ const TripDetailsPage = () => {
                 <div className="absolute -left-[1.6rem] top-[1.2rem] bg-white rounded-full">
                   <FaMapMarkerAlt className="text-primary text-xl" />
                 </div>
-                <div className=" text-base font-roboto text-secondary">
+                <div className="text-base font-roboto text-secondary">
                   {trip.arrivalLocation}
                 </div>
               </div>
@@ -137,34 +149,14 @@ const TripDetailsPage = () => {
                 Description
               </div>
             </div>
-            <p className="ml-8  text-gray-600 text-sm ">
+            <p className="ml-8 text-gray-600 text-sm">
               {trip.description || "No description available."}
             </p>
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div>
-                  <div className="flex items-center mb-10">
-                    <FaUser className="text-primary mr-2" />
-                    <span className="font-bold text-lg font-montserrat text-secondary">
-                      {trip.driver.firstName} {trip.driver.lastName}
-                    </span>
-                  </div>
-                  <div className="text-sm flex items-center text-gray-600 mt-1">
-                    <BiEnvelopeOpen className="text-secondary mr-2" />
-                    Contact {trip.driver.firstName}{" "}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-lg">
             <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center text-gray-600">
-                Total price for one passenger
-              </div>
+              <div className="text-gray-600">Total price for one passenger</div>
               <div className="font-bold text-lg text-primary font-montserrat">
                 {trip.pricePerSeat} €
               </div>
@@ -191,9 +183,15 @@ const TripDetailsPage = () => {
             <button
               className="w-full bg-primary text-white py-3 px-4 rounded-full font-bold hover:bg-opacity-90 transition duration-300"
               onClick={handleReserve}
-              disabled={trip.availableSeats === 0}
+              disabled={
+                trip.availableSeats === 0 || reservationStatus === "processing"
+              }
             >
-              {trip.availableSeats > 0 ? "Reserve" : "Fully Booked"}
+              {trip.availableSeats > 0
+                ? reservationStatus === "processing"
+                  ? "Processing..."
+                  : "Reserve"
+                : "Fully Booked"}
             </button>
           </div>
         </div>
