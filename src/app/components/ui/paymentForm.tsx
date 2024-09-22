@@ -13,7 +13,6 @@ import {
 import { loadStripe } from "@stripe/stripe-js";
 import { ReservationService } from "@/app/services/reservation";
 import { FormProps } from "@/Utils/types/form";
-import { SubmitHandler } from "react-hook-form";
 import Form from "./form";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
