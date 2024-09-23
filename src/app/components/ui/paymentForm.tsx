@@ -177,7 +177,6 @@ const PaymentPage = () => {
           {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

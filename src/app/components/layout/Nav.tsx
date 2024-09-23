@@ -12,7 +12,7 @@ export default function Nav() {
 
   const handleLogout = () => {
     logout();
-    router.push("/pages/login");
+    router.push("/pages/auth/login");
   };
 
   return (
@@ -69,7 +69,7 @@ export default function Nav() {
           ) : (
             <li>
               <Link
-                href="/pages/login"
+                href="/pages/auth/login"
                 className="text-primary font-bold hover:text-secondary flex items-center"
               >
                 <span>Login</span>

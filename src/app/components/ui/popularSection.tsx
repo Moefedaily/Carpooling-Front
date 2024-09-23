@@ -11,7 +11,7 @@ const PopularTripsSection = () => {
   useEffect(() => {
     const fetchPopularTrips = async () => {
       try {
-        const trips = await TripService.getPopularTrips(5);
+        const trips = await TripService.getPopularTrips(3);
         setPopularTrips(trips);
       } catch (error) {
         console.error("Error fetching popular trips:", error);

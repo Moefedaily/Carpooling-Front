@@ -23,7 +23,7 @@ function Form<T extends FieldValues>({
         <div key={field.name}>
           <label
             htmlFor={field.name}
-            className="block text-sm font-medium text-primary"
+            className="block text-sm  font-bold text-primary"
           >
             {field.label}
           </label>
@@ -65,7 +65,7 @@ function Form<T extends FieldValues>({
       <div>
         <button
           type="submit"
-          className="w-full px-4 py-2 font-bold text-bg bg-gradient-to-r from-primary to-secondary rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
+          className="w-full px-4 py-2 font-bold text-bg bg-gradient-to-r from-primary to-secondary rounded-md hover:bg-secondary  focus:ring-secondary transition-colors"
         >
           {submitButtonText}
         </button>
