@@ -5,7 +5,9 @@ import {
   RegisterData,
 } from "../../Utils/types/user";
 import api from "./api";
+import { disconnectSocket, initializeSocket } from "./ws";
 
+const isBrowser = typeof window !== "undefined";
 export const login = async (
   credentials: LoginCredentials
 ): Promise<AuthResponse> => {
@@ -13,7 +15,10 @@ export const login = async (
     const response = await api.post<AuthResponse>("/auth/login", credentials);
     if (response.data.success && response.data.data.accessToken) {
       localStorage.setItem("token", response.data.data.accessToken);
-      console.log(JSON.stringify(response.data.data));
+      
+      initializeSocket(response.data.data.accessToken);
+      console.debug(`initialized socket ${response.data.data.accessToken}`);
+
       return response.data;
     } else {
       throw new Error(response.data.message || "Login failed");
@@ -22,7 +27,6 @@ export const login = async (
     throw new Error("An unexpected error occurred during login");
   }
 };
-
 export const register = async (data: RegisterData): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>("/auth/register", data);
   if (response.data.success && response.data.data.accessToken) {
@@ -32,12 +36,24 @@ export const register = async (data: RegisterData): Promise<AuthResponse> => {
 };
 export const logout = () => {
   localStorage.removeItem("token");
+  disconnectSocket();
 };
 
 export const isAuthenticated = () => {
-  return !!localStorage.getItem("token");
+  return isBrowser ? !!localStorage.getItem("token") : false;
 };
 
+export const getUserWeb = () => {
+  if (!isBrowser) return null;
+
+  const token = localStorage.getItem("token");
+  if (token) {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    return JSON.parse(window.atob(base64));
+  }
+  return null;
+};
 export const getUser = () => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -53,7 +69,7 @@ export const getUserId = () => {
   const user = getUser();
   console.debug(user);
   if (user) {
-    return user.id;
+    return user.sub;
   }
   return null;
 };

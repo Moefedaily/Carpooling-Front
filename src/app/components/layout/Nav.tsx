@@ -1,19 +1,36 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { IoIosLogIn, IoIosLogOut, IoMdCar } from "react-icons/io";
+import {
+  IoIosLogIn,
+  IoIosLogOut,
+  IoMdCar,
+  IoIosChatboxes,
+} from "react-icons/io";
 import { isAuthenticated, logout, getUser } from "@/app/services/auth";
+import { WebSocketHook } from "../Hook/wsHook";
+import MessagesDropdown from "../ui/MessagesDropdown/messageDropdown";
 
 export default function Nav() {
-  const router = useRouter();
+  const { push } = useRouter();
   const authenticated = isAuthenticated();
   const user = authenticated ? getUser() : null;
+  const [showMessagesDropdown, setShowMessagesDropdown] = useState(false);
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+  const { unreadCount } = WebSocketHook();
 
   const handleLogout = () => {
     logout();
-    router.push("/pages/auth/login");
+    push("/pages/auth/login");
   };
+
+  const handleNotificationClear = () => {
+    setHasUnreadMessages(false);
+  };
+  useEffect(() => {
+    setHasUnreadMessages(unreadCount > 0);
+  }, [unreadCount]);
 
   return (
     <nav className="absolute top-0 left-0 right-0 z-20 ">
@@ -56,6 +73,27 @@ export default function Nav() {
                   </Link>
                 </li>
               )}
+              <li className="relative">
+                <button
+                  onClick={() => setShowMessagesDropdown(!showMessagesDropdown)}
+                  className="flex items-center"
+                >
+                  <IoIosChatboxes className="text-primary mr-2" />
+                  Messages
+                  {hasUnreadMessages && !showMessagesDropdown && (
+                    <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs ml-1">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+                <div className="absolute right-0 top-full">
+                  <MessagesDropdown
+                    isOpen={showMessagesDropdown}
+                    onClose={() => setShowMessagesDropdown(false)}
+                    onNotificationClear={handleNotificationClear}
+                  />
+                </div>
+              </li>
               <li>
                 <button
                   onClick={handleLogout}

@@ -6,9 +6,10 @@ import { Trip } from "@/Utils/types/trip";
 import Header from "@/app/components/layout/Header";
 import Hero from "@/app/components/layout/Hero";
 import Footer from "@/app/components/layout/Footer";
-import { FaMapMarkerAlt, FaInfoCircle } from "react-icons/fa";
+import { FaMapMarkerAlt, FaInfoCircle, FaUser } from "react-icons/fa";
 import { Oval } from "react-loader-spinner";
 import { format, parseISO } from "date-fns";
+import { MessageService } from "@/app/services/messages";
 
 const TripDetailsPage = () => {
   const params = useParams();
@@ -21,7 +22,8 @@ const TripDetailsPage = () => {
   const [reservationStatus, setReservationStatus] = useState<
     "idle" | "processing" | "error"
   >("idle");
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [message, setMessage] = useState("");
   useEffect(() => {
     const fetchTripDetails = async () => {
       try {
@@ -35,6 +37,10 @@ const TripDetailsPage = () => {
     };
     fetchTripDetails();
   }, [id]);
+
+  const handleContactDriver = () => {
+    setIsModalOpen(true);
+  };
 
   const handleReserve = async () => {
     try {
@@ -152,6 +158,21 @@ const TripDetailsPage = () => {
             <p className="ml-8 text-gray-600 text-sm">
               {trip.description || "No description available."}
             </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div>
+                  <div className="flex items-center mb-10">
+                    <FaUser className="text-primary mr-2" />
+                    <span className="font-bold text-lg font-montserrat text-secondary">
+                      {trip.driver.firstName} {trip.driver.lastName}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-lg">

@@ -101,4 +101,9 @@ export const TripService = {
   deleteTrip: async (id: number): Promise<void> => {
     await api.delete(`/trips/${id}`);
   },
+
+  getUserTrips: async () => {
+    const response = await api.get("/trips/user");
+    return response.data;
+  },
 };
