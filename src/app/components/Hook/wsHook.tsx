@@ -40,18 +40,8 @@ export const WebSocketHook = () => {
   }, []);
 
   const markAsRead = async (messageId: number) => {
-    try {
-      await MessageService.markMessageAsRead(messageId);
-      setRecentMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.id === messageId ? { ...msg, isRead: true } : msg
-        )
-      );
-      const newUnreadCount = await MessageService.getUnreadMessageCount();
-      setUnreadCount(newUnreadCount.data);
-    } catch (error) {
-      console.error("Failed to mark message as read:", error);
-    }
+    await MessageService.markMessageAsRead(messageId);
+    setUnreadCount((prev) => Math.max(0, prev - 1));
   };
 
   const resetUnreadCount = () => {

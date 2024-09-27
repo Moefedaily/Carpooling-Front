@@ -17,20 +17,21 @@ export default function Nav() {
   const authenticated = isAuthenticated();
   const user = authenticated ? getUser() : null;
   const [showMessagesDropdown, setShowMessagesDropdown] = useState(false);
-  const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
-  const { unreadCount } = WebSocketHook();
+  const { unreadCount, resetUnreadCount } = WebSocketHook();
 
   const handleLogout = () => {
     logout();
     push("/pages/auth/login");
   };
 
-  const handleNotificationClear = () => {
-    setHasUnreadMessages(false);
+  const handleOpenMessages = () => {
+    setShowMessagesDropdown(true);
+    resetUnreadCount();
   };
-  useEffect(() => {
-    setHasUnreadMessages(unreadCount > 0);
-  }, [unreadCount]);
+
+  const handleCloseMessages = () => {
+    setShowMessagesDropdown(false);
+  };
 
   return (
     <nav className="absolute top-0 left-0 right-0 z-20 ">
@@ -75,12 +76,12 @@ export default function Nav() {
               )}
               <li className="relative">
                 <button
-                  onClick={() => setShowMessagesDropdown(!showMessagesDropdown)}
+                  onClick={handleOpenMessages}
                   className="flex items-center"
                 >
                   <IoIosChatboxes className="text-primary mr-2" />
                   Messages
-                  {hasUnreadMessages && !showMessagesDropdown && (
+                  {unreadCount > 0 && (
                     <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs ml-1">
                       {unreadCount}
                     </span>
@@ -89,8 +90,8 @@ export default function Nav() {
                 <div className="absolute right-0 top-full">
                   <MessagesDropdown
                     isOpen={showMessagesDropdown}
-                    onClose={() => setShowMessagesDropdown(false)}
-                    onNotificationClear={handleNotificationClear}
+                    onClose={handleCloseMessages}
+                    onNotificationClear={resetUnreadCount}
                   />
                 </div>
               </li>

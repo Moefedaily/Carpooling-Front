@@ -15,7 +15,7 @@ export const login = async (
     const response = await api.post<AuthResponse>("/auth/login", credentials);
     if (response.data.success && response.data.data.accessToken) {
       localStorage.setItem("token", response.data.data.accessToken);
-      
+
       initializeSocket(response.data.data.accessToken);
       console.debug(`initialized socket ${response.data.data.accessToken}`);
 
@@ -67,7 +67,6 @@ export const getUser = () => {
 
 export const getUserId = () => {
   const user = getUser();
-  console.debug(user);
   if (user) {
     return user.sub;
   }

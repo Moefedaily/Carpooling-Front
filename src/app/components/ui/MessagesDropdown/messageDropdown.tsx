@@ -24,7 +24,20 @@ const MessagesDropdown: React.FC<MessagesDropdownProps> = ({
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { markAsRead } = WebSocketHook();
+  const { markAsRead, recentMessages } = WebSocketHook();
+
+  useEffect(() => {
+    if (activeConversation) {
+      // When i received a new message (in recentMessages),
+      // i check if it belongs to the active conversation if yes add it
+      const newMessage = recentMessages[0];
+      if (newMessage && newMessage.id === activeConversation.id) {
+        console.debug(`new Message id  = ${newMessage.id}`);
+        console.debug(`active conversation = ${activeConversation.id}`);
+        setMessages((prev) => [...prev, newMessage]);
+      }
+    }
+  }, [recentMessages, activeConversation]);
 
   useEffect(() => {
     if (isOpen) {
@@ -87,6 +100,10 @@ const MessagesDropdown: React.FC<MessagesDropdownProps> = ({
       }
     }
   };
+  const handleClose = () => {
+    setActiveConversation(null);
+    onClose();
+  };
 
   if (!isOpen) return null;
   if (isLoading) return <div className="p-4">Loading conversations...</div>;
@@ -96,7 +113,10 @@ const MessagesDropdown: React.FC<MessagesDropdownProps> = ({
     <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl overflow-hidden">
       <div className="bg-gray-100 px-4 py-3 flex justify-between items-center">
         <h3 className="font-semibold text-gray-700">Messages</h3>
-        <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+        <button
+          onClick={handleClose}
+          className="text-gray-500 hover:text-gray-700"
+        >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"

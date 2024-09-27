@@ -26,8 +26,8 @@ const MessagesDropdown: React.FC<MessagesDropdownProps> = ({
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { markAsRead } = WebSocketHook();
-  const currentUserId = getUserId(); // You'll need to implement this function
+  const { markAsRead, recentMessages } = WebSocketHook();
+  const currentUserId = getUserId();
 
   useEffect(() => {
     if (isOpen) {
@@ -35,6 +35,26 @@ const MessagesDropdown: React.FC<MessagesDropdownProps> = ({
       onNotificationClear();
     }
   }, [isOpen]);
+  useEffect(() => {
+    if (recentMessages.length > 0) {
+      const newMessage = recentMessages[0];
+      setConversations((prevConversations) =>
+        prevConversations.map((conv) =>
+          conv.id === newMessage.conversation.id
+            ? { ...conv, unreadCount: conv.unreadCount + 1 }
+            : conv
+        )
+      );
+
+      if (
+        activeConversation &&
+        newMessage.conversation.id === activeConversation.id
+      ) {
+        setMessages((prev) => [...prev, newMessage]);
+        markAsRead(newMessage.id);
+      }
+    }
+  }, [recentMessages, activeConversation]);
 
   const fetchConversations = async () => {
     try {
