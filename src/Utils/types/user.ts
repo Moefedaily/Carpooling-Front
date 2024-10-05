@@ -6,6 +6,7 @@ export interface User {
   birthDate: string;
   phoneNumber: string;
   isEmailConfirmed: boolean;
+  isVerifiedDriver: boolean;
 }
 
 export interface LoginCredentials {

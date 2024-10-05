@@ -42,18 +42,6 @@ export const logout = () => {
 export const isAuthenticated = () => {
   return isBrowser ? !!localStorage.getItem("token") : false;
 };
-
-export const getUserWeb = () => {
-  if (!isBrowser) return null;
-
-  const token = localStorage.getItem("token");
-  if (token) {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    return JSON.parse(window.atob(base64));
-  }
-  return null;
-};
 export const getUser = () => {
   const token = localStorage.getItem("token");
   if (token) {
