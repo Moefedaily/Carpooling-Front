@@ -128,7 +128,7 @@ export default function Nav() {
                         )}
                       </Link>
                       <Link
-                        href="/profile"
+                        href="/pages/profile"
                         className="block px-4 py-2 text-primary hover:text-secondary"
                       >
                         Profile

@@ -29,7 +29,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({
         )}
       </Link>
       <Link
-        href="/profile"
+        href="/pages/profile"
         className="flex items-center px-4 py-2 text-sm text-primary hover:bg-gray-100"
       >
         <IoMdPerson className="mr-3" />

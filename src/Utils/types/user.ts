@@ -1,3 +1,7 @@
+import { Car } from "./cars";
+import { licenseCredentials } from "./license";
+import { Trip } from "./trip";
+
 export interface User {
   id: number;
   email: string;
@@ -34,5 +38,15 @@ export interface AuthResponse {
   message: string;
   data: {
     accessToken: string;
+  };
+}
+
+export interface UserProfileResponse {
+  success: boolean;
+  message: string;
+  data: User & {
+    trips: Trip[];
+    license: licenseCredentials;
+    car: Car[];
   };
 }
