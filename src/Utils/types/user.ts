@@ -7,6 +7,10 @@ export interface User {
   phoneNumber: string;
   isEmailConfirmed: boolean;
   isVerifiedDriver: boolean;
+  role: {
+    id: number;
+    name: string;
+  };
 }
 
 export interface LoginCredentials {

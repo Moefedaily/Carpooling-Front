@@ -1,19 +1,37 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Message } from "@/Utils/types/messages";
+import { Conversation } from "@/Utils/types/conversation";
 import MessageItem from "./MessageeItem";
 
-interface MessageListProps {
+interface MessagesListProps {
   messages: Message[];
+  conversation: Conversation;
 }
 
-const MessageList: React.FC<MessageListProps> = ({ messages }) => {
+const MessagesList: React.FC<MessagesListProps> = ({
+  messages,
+  conversation,
+}) => {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(scrollToBottom, [messages]);
+
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-2">
+    <div className="flex-grow overflow-y-auto p-4 space-y-4">
       {messages.map((message) => (
-        <MessageItem key={message.id} message={message} />
+        <MessageItem
+          key={message.id}
+          message={message}
+          conversation={conversation}
+        />
       ))}
+      <div ref={messagesEndRef} />
     </div>
   );
 };
 
-export default MessageList;
+export default MessagesList;

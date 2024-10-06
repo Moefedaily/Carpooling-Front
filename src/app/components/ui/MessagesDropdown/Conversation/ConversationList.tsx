@@ -12,14 +12,19 @@ const ConversationList: React.FC<ConversationListProps> = ({
   onConversationClick,
 }) => {
   return (
-    <div className="max-h-96 overflow-y-auto">
-      {conversations.map((conversation) => (
-        <ConversationItem
-          key={conversation.id}
-          conversation={conversation}
-          onClick={() => onConversationClick(conversation)}
-        />
-      ))}
+    <div className="w-1/3 border-r border-gray-200 overflow-y-auto">
+      <h2 className="text-xl font-semibold p-4 border-b border-gray-200">
+        Conversations
+      </h2>
+      <div className="divide-y divide-gray-200">
+        {conversations.map((conversation) => (
+          <ConversationItem
+            key={conversation.id}
+            conversation={conversation}
+            onClick={() => onConversationClick(conversation)}
+          />
+        ))}
+      </div>
     </div>
   );
 };

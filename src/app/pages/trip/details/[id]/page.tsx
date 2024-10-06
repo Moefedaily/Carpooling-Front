@@ -2,18 +2,26 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { TripService } from "@/app/services/trip";
+import { conversationService } from "@/app/services/conversation";
 import { Trip } from "@/Utils/types/trip";
 import Header from "@/app/components/layout/Header";
 import Hero from "@/app/components/layout/Hero";
 import Footer from "@/app/components/layout/Footer";
-import { FaMapMarkerAlt, FaInfoCircle, FaUser } from "react-icons/fa";
+import {
+  FaMapMarkerAlt,
+  FaInfoCircle,
+  FaUser,
+  FaEnvelope,
+} from "react-icons/fa";
 import { Oval } from "react-loader-spinner";
 import { format, parseISO } from "date-fns";
-import { MessageService } from "@/app/services/messages";
+import MessageModal from "@/app/components/ui/messagesModal";
+import { isAuthenticated, getUserId } from "@/app/services/auth";
+import { Conversation } from "@/Utils/types/conversation";
 
 const TripDetailsPage = () => {
   const params = useParams();
-  const { push } = useRouter();
+  const router = useRouter();
   const id = params.id as string;
   const [trip, setTrip] = useState<Trip | null>(null);
   const [loading, setLoading] = useState(true);
@@ -22,8 +30,9 @@ const TripDetailsPage = () => {
   const [reservationStatus, setReservationStatus] = useState<
     "idle" | "processing" | "error"
   >("idle");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [message, setMessage] = useState("");
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [conversation, setConversation] = useState<Conversation | null>(null);
+
   useEffect(() => {
     const fetchTripDetails = async () => {
       try {
@@ -38,11 +47,37 @@ const TripDetailsPage = () => {
     fetchTripDetails();
   }, [id]);
 
-  const handleContactDriver = () => {
-    setIsModalOpen(true);
-  };
+  const handleMessageDriver = async () => {
+    if (!isAuthenticated()) {
+      router.push(
+        "/login?redirect=" + encodeURIComponent(window.location.pathname)
+      );
+      return;
+    }
 
+    try {
+      const userId = getUserId();
+      if (!userId) throw new Error("User ID not found");
+
+      const conversationData = await conversationService.findConversation(
+        Number(id),
+        userId
+      );
+      setConversation(conversationData.data);
+      setIsMessageModalOpen(true);
+    } catch (err) {
+      console.error("Error handling conversation:", err);
+      setError("Failed to open conversation");
+    }
+  };
   const handleReserve = async () => {
+    if (!isAuthenticated()) {
+      router.push(
+        "/login?redirect=" + encodeURIComponent(window.location.pathname)
+      );
+      return;
+    }
+
     try {
       setReservationStatus("processing");
       const response = await TripService.joinTrip(Number(id), seats);
@@ -51,7 +86,7 @@ const TripDetailsPage = () => {
           "Failed to create reservation: No reservation ID returned"
         );
       }
-      push(`/pages/payment/${response.reservation.id}`);
+      router.push(`/pages/payment/${response.reservation.id}`);
     } catch (err) {
       console.error("Error in handleReserve:", err);
       setError(
@@ -163,15 +198,18 @@ const TripDetailsPage = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <div>
-                  <div className="flex items-center mb-10">
-                    <FaUser className="text-primary mr-2" />
-                    <span className="font-bold text-lg font-montserrat text-secondary">
-                      {trip.driver.firstName} {trip.driver.lastName}
-                    </span>
-                  </div>
-                </div>
+                <FaUser className="text-primary mr-2" />
+                <span className="font-bold text-lg font-montserrat text-secondary">
+                  {trip.driver.firstName} {trip.driver.lastName}
+                </span>
               </div>
+              <button
+                onClick={handleMessageDriver}
+                className="flex items-center justify-center bg-secondary text-white py-2 px-4 rounded-full font-bold hover:bg-opacity-90 transition duration-300"
+              >
+                <FaEnvelope className="mr-2" />
+                Message Driver
+              </button>
             </div>
           </div>
 
@@ -216,6 +254,15 @@ const TripDetailsPage = () => {
             </button>
           </div>
         </div>
+        {isMessageModalOpen && (
+          <MessageModal
+            isOpen={isMessageModalOpen}
+            onClose={() => setIsMessageModalOpen(false)}
+            conversation={conversation}
+            tripId={Number(id)}
+            currentUserId={getUserId()}
+          />
+        )}
       </div>
       <Footer />
     </div>

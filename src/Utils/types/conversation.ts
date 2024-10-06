@@ -1,3 +1,4 @@
+import { Message } from "./messages";
 import { Trip } from "./trip";
 import { User } from "./user";
 
@@ -9,10 +10,7 @@ export interface Conversation {
     firstName: string;
     lastName: string;
   };
-  lastMessage: {
-    content: string;
-    sender: User;
-  };
+  messages: Message[];
   lastMessageDate: string;
   unreadCount: number;
 }

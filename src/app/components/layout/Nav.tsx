@@ -8,27 +8,25 @@ import {
   IoMdCar,
   IoIosChatboxes,
   IoIosNotifications,
+  IoMdAdd,
+  IoMdPerson,
 } from "react-icons/io";
 import { isAuthenticated, logout, getUser } from "@/app/services/auth";
 import { WebSocketHook } from "../Hook/wsHook";
-import MessagesDropdown from "../ui/MessagesDropdown/messageDropdown";
 import NotificationsDropdown from "../ui/notificationDropdown";
 import { User } from "@/Utils/types/user";
+
 export default function Nav() {
   const { push } = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [showMessagesDropdown, setShowMessagesDropdown] = useState(false);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showNotificationsDropdown, setShowNotificationsDropdown] =
     useState(false);
 
-  const {
-    unreadCount,
-    resetUnreadCount,
-    unreadNotificationCount,
-    resetUnreadNotificationCount,
-  } = WebSocketHook();
+  const { unreadCount, unreadNotificationCount, resetUnreadNotificationCount } =
+    WebSocketHook();
 
   useEffect(() => {
     setIsClient(true);
@@ -46,26 +44,8 @@ export default function Nav() {
     push("/pages/auth/login");
   };
 
-  const handleOpenMessages = () => {
-    setShowMessagesDropdown(true);
-    resetUnreadCount();
-  };
-
-  const handleCloseMessages = () => {
-    setShowMessagesDropdown(false);
-  };
-
-  const handleOpenNotifications = () => {
-    setShowNotificationsDropdown(true);
-    resetUnreadNotificationCount();
-  };
-
-  const handleCloseNotifications = () => {
-    setShowNotificationsDropdown(false);
-  };
-
   return (
-    <nav className="absolute top-0 left-0 right-0 z-20">
+    <nav className="absolute top-0 left-0 right-0 z-20 ">
       <div className="flex justify-between items-center py-6 px-10 bg-nav bg-opacity-60 rounded-md">
         <div>
           <Link
@@ -95,66 +75,72 @@ export default function Nav() {
             </li>
             {authenticated ? (
               <>
-                {user && !user.isVerifiedDriver && (
+                {user && user.isVerifiedDriver && (
                   <li>
                     <Link
-                      href="/pages/driver/register"
+                      href="/pages/driver/createTrip"
                       className="text-primary font-bold hover:text-secondary flex items-center"
                     >
-                      <span>Become a Driver</span>
-                      <IoMdCar className="text-primary ml-2" />
+                      <IoMdAdd className="text-primary mr-2" />
+                      <span>Add Trip</span>
                     </Link>
                   </li>
                 )}
                 <li className="relative">
                   <button
-                    onClick={handleOpenMessages}
-                    className="flex items-center text-primary font-bold hover:text-secondary"
-                  >
-                    <IoIosChatboxes className="text-primary mr-2" />
-                    Messages
-                    {unreadCount > 0 && (
-                      <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs ml-1">
-                        {unreadCount}
-                      </span>
-                    )}
-                  </button>
-                  <div className="absolute right-0 top-full">
-                    <MessagesDropdown
-                      isOpen={showMessagesDropdown}
-                      onClose={handleCloseMessages}
-                      onNotificationClear={resetUnreadCount}
-                    />
-                  </div>
-                </li>
-                <li className="relative">
-                  <button
-                    onClick={handleOpenNotifications}
+                    onClick={() =>
+                      setShowNotificationsDropdown(!showNotificationsDropdown)
+                    }
                     className="flex items-center text-primary font-bold hover:text-secondary"
                   >
                     <IoIosNotifications className="text-primary mr-2" />
-                    Notifications
                     {unreadNotificationCount > 0 && (
-                      <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs ml-1">
+                      <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs">
                         {unreadNotificationCount}
                       </span>
                     )}
                   </button>
-                  <div className="absolute right-0 top-full">
-                    <NotificationsDropdown
-                      isOpen={showNotificationsDropdown}
-                      onClose={handleCloseNotifications}
-                    />
-                  </div>
+                  <NotificationsDropdown
+                    isOpen={showNotificationsDropdown}
+                    onClose={() => setShowNotificationsDropdown(false)}
+                  />
                 </li>
-                <li>
+                <li className="relative">
                   <button
-                    onClick={handleLogout}
-                    className="text-primary font-bold hover:text-secondary flex items-center"
+                    onClick={() => setShowUserDropdown(!showUserDropdown)}
+                    className="flex items-center text-primary font-bold hover:text-secondary"
                   >
-                    <span>Logout</span>
-                    <IoIosLogOut className="text-primary ml-2" />
+                    <IoMdPerson className="text-primary mr-2" />
+                    {user?.firstName}
                   </button>
+                  {showUserDropdown && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                      <Link
+                        href="/pages/messages"
+                        className="block px-4 py-2 text-primary hover:text-secondary"
+                      >
+                        <IoIosChatboxes className="inline-block mr-2" />
+                        Messages
+                        {unreadCount > 0 && (
+                          <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs ml-1">
+                            {unreadCount}
+                          </span>
+                        )}
+                      </Link>
+                      <Link
+                        href="/profile"
+                        className="block px-4 py-2 text-primary hover:text-secondary"
+                      >
+                        Profile
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-primary hover:text-secondary"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
                 </li>
               </>
             ) : (

@@ -7,7 +7,8 @@ interface MessageInputProps {
 const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
   const [message, setMessage] = useState("");
 
-  const handleSend = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     if (message.trim()) {
       onSendMessage(message);
       setMessage("");
@@ -15,23 +16,23 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
   };
 
   return (
-    <div className="bg-gray-50 p-2">
-      <div className="flex items-center">
+    <form onSubmit={handleSubmit} className="p-4 bg-white border-t">
+      <div className="flex space-x-2">
         <input
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="flex-1 border rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-grow px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-primary"
           placeholder="Type a message..."
         />
         <button
-          onClick={handleSend}
-          className="bg-blue-500 text-white px-4 py-2 rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          type="submit"
+          className="px-6 py-2 bg-primary text-white rounded-full hover:bg-opacity-90 focus:outline-none transition duration-150 ease-in-out"
         >
           Send
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 
