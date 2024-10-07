@@ -14,13 +14,13 @@ export const userService = {
 
       const tripsResponse = await api.get(`/trips/user`);
       userData.trips = tripsResponse.data;
+      if (userData.isVerifiedDriver) {
+        const licenseResponse = await api.get(`/licenses/driver`);
+        userData.license = licenseResponse.data;
 
-      const licenseResponse = await api.get(`/licenses/driver`);
-      userData.license = licenseResponse.data;
-
-      const carResponse = await api.get(`/cars/owner`);
-      userData.car = carResponse.data;
-
+        const carResponse = await api.get(`/cars/owner`);
+        userData.car = carResponse.data;
+      }
       return userData;
     } catch (error) {
       console.error("Error fetching user profile:", error);
