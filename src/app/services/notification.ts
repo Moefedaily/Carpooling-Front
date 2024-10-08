@@ -3,11 +3,11 @@ import api from "./api";
 
 export const NotificationService = {
   getRecentNotifications: async () => {
-    return api.get<Notification[]>("/notifications/recent");
+    return api.get("/notifications/recent");
   },
 
   getUnreadNotificationCount: async () => {
-    return api.get<number>("/notifications/unread-count");
+    return api.get("/notifications/unread-count");
   },
 
   markNotificationAsRead: async (notificationId: number) => {

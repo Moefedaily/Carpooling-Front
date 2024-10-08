@@ -6,31 +6,29 @@ function Form<T extends FieldValues>({
   fields,
   onSubmit,
   submitButtonText,
+  defaultValues,
 }: FormProps<T>) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<T>();
+  } = useForm<T>({ defaultValues });
 
   const onSubmitWrapper: SubmitHandler<T> = (data) => {
     onSubmit(data);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmitWrapper)}
-      className="space-y-4 sm:space-y-6"
-    >
+    <form onSubmit={handleSubmit(onSubmitWrapper)} className="space-y-4">
       {fields.map((field) => (
-        <div key={field.name}>
+        <div key={field.name} className="mb-2">
           <label
             htmlFor={field.name}
-            className="block text-sm font-bold text-primary sm:text-base"
+            className="block text-sm font-medium text-gray-700 mb-1"
           >
             {field.label}
           </label>
-          <div className="mt-1 sm:mt-2">
+          <div>
             {field.type === "select" ? (
               <select
                 id={field.name}
@@ -38,7 +36,7 @@ function Form<T extends FieldValues>({
                   required: field.required && `${field.label} is required`,
                   validate: field.validate,
                 })}
-                className="block w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary text-sm sm:text-base"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary text-sm"
               >
                 {field.options?.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -54,21 +52,21 @@ function Form<T extends FieldValues>({
                   validate: field.validate,
                 })}
                 type={field.type}
-                className="block w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary text-sm sm:text-base"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary text-sm"
               />
             )}
             {errors[field.name] && (
-              <span className="text-red-700 font-bold text-xs sm:text-sm mt-1">
+              <span className="text-red-500 text-xs mt-1">
                 {errors[field.name]?.message as string}
               </span>
             )}
           </div>
         </div>
       ))}
-      <div className="mt-6">
+      <div className="mt-4">
         <button
           type="submit"
-          className="w-full px-4 py-2 sm:py-3 font-bold text-bg bg-gradient-to-r from-primary to-secondary rounded-md hover:bg-secondary focus:ring-secondary transition-colors text-sm sm:text-base"
+          className="w-full px-4 py-2 text-white bg-primary rounded-md hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         >
           {submitButtonText}
         </button>

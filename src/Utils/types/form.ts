@@ -1,4 +1,4 @@
-import { FieldValues, SubmitHandler } from "react-hook-form";
+import { DefaultValues, FieldValues, SubmitHandler } from "react-hook-form";
 
 export interface FormField {
   name: string;
@@ -13,4 +13,5 @@ export interface FormProps<T extends FieldValues> {
   fields: FormField[];
   onSubmit: (data: T) => void | Promise<void>;
   submitButtonText: string;
+  defaultValues?: DefaultValues<T> | undefined;
 }

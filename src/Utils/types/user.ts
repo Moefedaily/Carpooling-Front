@@ -17,6 +17,14 @@ export interface User {
   };
 }
 
+export interface UserUpdate {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  birthDate?: Date;
+  phoneNumber?: string;
+}
+
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -49,4 +57,10 @@ export interface UserProfileResponse {
     license: licenseCredentials;
     car: Car[];
   };
+}
+
+export interface changePasswordData {
+  currentPassword: string;
+  confirmPassword: string;
+  newPassword: string;
 }
