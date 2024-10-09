@@ -99,7 +99,7 @@ export const resetPassword = async (
   }
 };
 
-export const confirmEmail = async (token: string): Promise<AuthResponse> => {
+export const confirmEmail = async (token: string) => {
   try {
     const response = await api.get<AuthResponse>(
       `/auth/confirm-email?token=${token}`
