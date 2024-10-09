@@ -4,7 +4,8 @@ let socket: Socket | null = null;
 
 export const initializeSocket = (token: string): Socket => {
   if (!socket) {
-    socket = io("http://localhost:3333", {
+    socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
+      withCredentials: true,
       auth: {
         token: `Bearer ${token}`,
       },
