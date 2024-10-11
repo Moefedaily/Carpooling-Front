@@ -16,6 +16,7 @@ import Footer from "@/app/components/layout/Footer";
 import EditProfileForm from "@/app/components/ui/UserProfile/EditProfileForm";
 import ChangePasswordForm from "@/app/components/ui/UserProfile/ChangePasswordForm";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState<UserProfileResponse["data"] | null>(
@@ -110,6 +111,17 @@ const UserProfile = () => {
             onEditProfile={() => setShowEditProfileModal(true)}
             onChangePassword={() => setShowChangePasswordModal(true)}
           />
+          {userData.isVerifiedDriver && (
+            <div>
+              <h2 className="text-xl font-bold mb-2">Driver Dashboard</h2>
+              <Link
+                href="/pages/driver/dashboard"
+                className="text-primary hover:underline"
+              >
+                Go to Driver Dashboard
+              </Link>
+            </div>
+          )}
         </div>
 
         <Modal

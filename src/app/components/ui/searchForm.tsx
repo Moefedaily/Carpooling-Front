@@ -1,25 +1,31 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { SearchData } from "@/Utils/types/trip";
-import { FaLocationPin } from "react-icons/fa6";
+import Autocomplete from "./autocomplete";
+
 
 const SearchForm = () => {
-  const { register, handleSubmit } = useForm<SearchData>();
+  const { register, handleSubmit, setValue } = useForm<SearchData>();
   const { push } = useRouter();
 
-  const onSubmit = (data: {
-    departureLocation: string;
-    arrivalLocation: string;
-    departureDate: string;
-    numberOfPassengers: string;
-  }) => {
+  const onSubmit = (data: SearchData) => {
     push(`/pages/searchResult?${new URLSearchParams(data).toString()}`);
   };
 
+  const handleSelect = (name: string, value: string, displayValue: string) => {
+    setValue(name, value);
+    const inputElement = document.querySelector(
+      `input[name="${name}"]`
+    ) as HTMLInputElement;
+    if (inputElement) {
+      inputElement.value = displayValue;
+    }
+  };
+
   return (
-    <div className=" bg-teratery mx-auto py-20 ">
+    <div className="bg-teratery mx-auto py-20">
       <div className="max-w-4xl mx-auto">
         <h2 className="text-xl font-bold text-center text-secondary font-montserrat">
           Find your next ride
@@ -27,20 +33,22 @@ const SearchForm = () => {
         <h3 className="font-light mb-6 text-center text-subTitle font-roboto">
           Please enter your route in the search bar below
         </h3>
-        <div className=" p-6 rounded  bg-teratery bg-opacity-15 shadow-lg">
+        <div className="p-6 rounded bg-teratery bg-opacity-15 shadow-lg">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-wrap gap-4"
           >
-            <input
-              {...register("departureLocation")}
+            <Autocomplete
+              register={register}
+              name="departureLocation"
               placeholder="Departure"
-              className="flex-1 p-2 rounded text-sm font-medium text-primary focus:outline-none focus:ring-2 focus:ring-primary placeholder-primary"
+              onSelect={handleSelect}
             />
-            <input
-              {...register("arrivalLocation")}
+            <Autocomplete
+              register={register}
+              name="arrivalLocation"
               placeholder="Destination"
-              className="flex-1 p-2 rounded text-sm font-medium text-primary focus:outline-none focus:ring-2 focus:ring-primary placeholder-primary"
+              onSelect={handleSelect}
             />
             <input
               {...register("departureDate")}
@@ -60,7 +68,7 @@ const SearchForm = () => {
             </select>
             <button
               type="submit"
-              className=" px-5 py-2 font-bold text-white bg-gradient-to-r from-primary to-secondary rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-primary"
+              className="px-5 py-2 font-bold text-white bg-gradient-to-r from-primary to-secondary rounded-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-primary"
             >
               Search
             </button>
