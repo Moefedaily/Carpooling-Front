@@ -65,10 +65,7 @@ const DriverTripCard: React.FC<DriverTripCardProps> = ({
         </div>
         <div className="flex items-center">
           <FaUsers className="mr-2 text-secondary" />
-          <span>
-            {trip.car.numberOfSeats || 0 - trip.availableSeats}/
-            {trip.availableSeats} Seats Booked
-          </span>
+          <span>{trip.availableSeats} Seats available</span>
         </div>
         {trip.car && (
           <div className="flex items-center">

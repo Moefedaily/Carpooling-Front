@@ -124,7 +124,7 @@ export const TripService = {
     }
   },
 
-  async updateTripStatus(tripId: number, newStatus: TripStatus): Promise<Trip> {
+  async updateTripStatus(tripId: number, newStatus: string): Promise<Trip> {
     try {
       const response = await api.patch<Trip>(
         `/trips/${tripId}/${newStatus.toLowerCase()}`

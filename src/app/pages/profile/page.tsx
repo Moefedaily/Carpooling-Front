@@ -91,16 +91,44 @@ const UserProfile = () => {
   return (
     <div className="bg-bg font-roboto">
       <Header />
-      <Hero
-        title="Profile"
-        image="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-      />
+      <Hero title="Profile" image="/profile-hero.jpg" />
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-6">My Profile</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <BasicInfo userData={userData} />
-          <TripHistory trips={userData.trips || []} />
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-bold mb-4 text-primary">
+              Recent Trips
+            </h2>
+            {userData.trips && userData.trips.length > 0 ? (
+              <ul className="space-y-4">
+                {userData.trips.slice(0, 3).map((trip) => (
+                  <li
+                    key={trip.id}
+                    className="bg-gray-50 p-4 rounded-md shadow-sm"
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-gray-700">
+                        {trip.departureLocation} to {trip.arrivalLocation}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {new Date(trip.departureDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500 italic">No recent trips.</p>
+            )}
+            <Link
+              href="/pages/tripHistory"
+              className="mt-4 inline-block text-primary hover:text-primary-dark hover:underline transition duration-300 ease-in-out"
+            >
+              View Full Trip History →
+            </Link>
+          </div>
           {userData.isVerifiedDriver && (
             <DriverInfo
               onShowLicenseModal={() => setShowLicenseModal(true)}
@@ -123,7 +151,6 @@ const UserProfile = () => {
             </div>
           )}
         </div>
-
         <Modal
           isOpen={showLicenseModal}
           onClose={() => setShowLicenseModal(false)}

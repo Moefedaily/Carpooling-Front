@@ -50,12 +50,16 @@ const EditTripForm: React.FC<EditTripFormProps> = ({
       label: "Price per Seat",
       type: "number",
       required: true,
+      validate: (value: number) =>
+        value > 0 || "Price per seat must be a positive number",
     },
     { name: "description", label: "Description", type: "text" },
   ];
 
   const handleSubmit = (data: UpdateTripData) => {
-    onSave({ ...data, id: trip.id });
+    const { id, ...updateData } = data;
+    updateData.pricePerSeat = Number(updateData.pricePerSeat);
+    onSave(updateData);
   };
 
   return (
