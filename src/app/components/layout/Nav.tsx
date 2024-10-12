@@ -87,7 +87,7 @@ export default function Nav() {
   const NavLink = ({ href, onClick, children }: NavLinkProps) => (
     <Link
       href={href}
-      className="block px-4 py-2 text-gray-600 hover:text-primary"
+      className="block px-4 py-4 text-gray-600 hover:text-primary"
       onClick={onClick}
     >
       {children}
