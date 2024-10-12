@@ -4,7 +4,6 @@ import { FaCircle, FaUser } from "react-icons/fa";
 
 const TripCard: React.FC<TripCardProps> = ({ trip, onSelect }) => {
   const handleClick = () => {
-    console.log("TripCard clicked", trip.id);
     onSelect(trip.id);
   };
 

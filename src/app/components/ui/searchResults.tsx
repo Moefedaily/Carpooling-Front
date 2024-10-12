@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { TripService } from "@/app/services/trip";
 import { Trip } from "@/Utils/types/trip";
 import TripCard from "./tripCard";
@@ -18,6 +18,7 @@ const SearchResults: React.FC = () => {
   const [filteredTrips, setFilteredTrips] = useState<Trip[]>([]);
   const [sortBy, setSortBy] = useState("earliest");
   const [startingTime, setStartingTime] = useState("");
+  const { push } = useRouter();
 
   const fetchTrips = async (searchData: any) => {
     const {
@@ -103,6 +104,9 @@ const SearchResults: React.FC = () => {
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartingTime(e.target.value);
   };
+  const handleTripSelect = (tripId: number) => {
+    push(`/trip/details/${tripId}`);
+  };
 
   return (
     <div className="container mx-auto py-28 px-4 max-w-3xl">
@@ -157,7 +161,7 @@ const SearchResults: React.FC = () => {
       <div className="space-y-3">
         {filteredTrips.length > 0 ? (
           filteredTrips.map((trip) => (
-            <TripCard key={trip.id} trip={trip} onSelect={() => {}} />
+            <TripCard key={trip.id} trip={trip} onSelect={handleTripSelect} />
           ))
         ) : (
           <p className="text-center text-gray-500">No trips found</p>
