@@ -15,9 +15,6 @@ const TripCard: React.FC<TripCardProps> = ({ trip, onSelect }) => {
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4">
         <div className="flex items-center mb-2 sm:mb-0">
-          <span className="text-xs sm:text-sm text-gray-600 mr-1 sm:mr-2">
-            {trip.departureTime}
-          </span>
           <span className="font-semibold font-roboto text-secondary text-sm sm:text-base">
             {trip.departureLocation}
           </span>
@@ -33,9 +30,6 @@ const TripCard: React.FC<TripCardProps> = ({ trip, onSelect }) => {
           <span className="font-semibold font-roboto text-secondary text-sm sm:text-base">
             {trip.arrivalLocation}
           </span>
-          <span className="ml-1 sm:ml-2 text-xs sm:text-sm text-secondary">
-            {trip.departureTime}
-          </span>
         </div>
       </div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
@@ -43,9 +37,6 @@ const TripCard: React.FC<TripCardProps> = ({ trip, onSelect }) => {
           <FaUser className="text-primary mr-1 sm:mr-2 text-sm sm:text-base" />
           <span className="text-xs sm:text-sm font-semibold font-montserrat text-secondary">
             {trip.driver.firstName}
-          </span>
-          <span className="ml-1 sm:ml-2 text-yellow-500 text-xs sm:text-sm">
-            ★ {trip.driver.id}
           </span>
         </div>
         <span className="font-bold text-base sm:text-lg md:text-xl text-primary">

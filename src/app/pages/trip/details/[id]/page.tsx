@@ -149,8 +149,7 @@ const TripDetailsPage = () => {
   return (
     <div>
       <Header />
-      <Hero title="Trip Details" image="/trip-details-hero.jpg" />
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto pt-28 p-8">
         <h2 className="text-2xl font-bold mb-6 text-center text-primary">
           {formatDate(trip.departureDate)}
         </h2>

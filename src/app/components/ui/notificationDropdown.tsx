@@ -12,7 +12,11 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { notifications, markNotificationAsRead, resetUnreadNotificationCount } = WebSocketHook();
+  const {
+    notifications,
+    markNotificationAsRead,
+    resetUnreadNotificationCount,
+  } = WebSocketHook();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +35,6 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
     // if (notification.type === 'NEW_MESSAGE') {
     //   router.push(`/messages/${notification.relatedEntityId}`);
     // }
-    
   };
 
   const renderNotification = (notification: Notification) => (
@@ -55,10 +58,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
     <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl overflow-hidden z-50">
       <div className="bg-gray-100 px-4 py-3 flex justify-between items-center">
         <h3 className="font-semibold text-gray-700">Notifications</h3>
-        <button
-          onClick={onClose}
-          className="text-gray-500 hover:text-gray-700"
-        >
+        <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"

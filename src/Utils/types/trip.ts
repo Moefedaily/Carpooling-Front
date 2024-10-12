@@ -3,12 +3,13 @@ import { User } from "./user";
 
 export enum TripStatus {
   PENDING = "PENDING",
-  CONFIRMED = "CONFIRMED",
-  FULL = "FULL",
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
-  CANCELLED = "CANCELLED",
+  CONFIRMED = "CONFIRMED", 
+  START = "START",
+  IN_PROGRESS = "IN_PROGRESS",  
+  COMPLETED = "COMPLETED",  
+  CANCELLED = "CANCELLED" 
 }
+
 
 export interface Trip {
   id: number;
@@ -37,6 +38,7 @@ export interface CreateTripData {
 }
 
 export interface UpdateTripData {
+  id?: number;
   departureLocation?: string;
   arrivalLocation?: string;
   departureDate?: string;
@@ -57,6 +59,7 @@ export interface TripFilters {
 }
 
 export interface SearchData {
+  [key: string]: string;
   departureLocation: string;
   arrivalLocation: string;
   departureDate: string;
@@ -68,7 +71,10 @@ export interface JoinTripData {
 }
 export interface TripCardProps {
   trip: Trip;
-  onSelect: (tripId: number) => void;
+  onSelect: (id: number) => void;
+  onEdit?: (id: number, trip: Trip) => void;
+  onDelete?: (id: number) => void;
+  onChangeStatus?: (id: number, status: TripStatus) => void;
 }
 
 export interface Reservation {

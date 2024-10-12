@@ -1,5 +1,5 @@
 export interface HeroProps {
-  title: string;
+  title?: string;
   image: string;
   fullHeight?: boolean;
 }

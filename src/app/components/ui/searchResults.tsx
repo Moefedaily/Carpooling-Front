@@ -1,9 +1,11 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { TripService } from "@/app/services/trip";
 import { Trip } from "@/Utils/types/trip";
 import TripCard from "./tripCard";
+import SearchForm from "./searchForm";
 
 const sortOptions = [
   { value: "earliest", label: "Earliest departure" },
@@ -12,44 +14,56 @@ const sortOptions = [
 
 const SearchResults: React.FC = () => {
   const searchParams = useSearchParams();
-  const departureLocation = searchParams.get("departureLocation");
-  const arrivalLocation = searchParams.get("arrivalLocation");
-  const departureDate = searchParams.get("departureDate");
-  const numberOfPassengers = searchParams.get("numberOfPassengers");
   const [trips, setTrips] = useState<Trip[]>([]);
+  const [filteredTrips, setFilteredTrips] = useState<Trip[]>([]);
   const [sortBy, setSortBy] = useState("earliest");
   const [startingTime, setStartingTime] = useState("");
-  const [filteredTrips, setFilteredTrips] = useState<Trip[]>([]);
-  const { push } = useRouter();
+
+  const fetchTrips = async (searchData: any) => {
+    const {
+      departureLocation,
+      arrivalLocation,
+      departureDate,
+      numberOfPassengers,
+    } = searchData;
+
+    if (
+      departureLocation &&
+      arrivalLocation &&
+      departureDate &&
+      numberOfPassengers
+    ) {
+      try {
+        const results = await TripService.searchTrips(
+          departureLocation,
+          arrivalLocation,
+          departureDate,
+          numberOfPassengers
+        );
+        setTrips(results);
+      } catch (error) {
+        console.error("Failed to fetch trips:", error);
+      }
+    }
+  };
+
+  const handleSearch = (searchData: any) => {
+    fetchTrips(searchData);
+  };
 
   useEffect(() => {
-    const fetchTrips = async () => {
-      if (
-        departureLocation &&
-        arrivalLocation &&
-        departureDate &&
-        numberOfPassengers
-      ) {
-        try {
-          const results = await TripService.searchTrips(
-            departureLocation.toString(),
-            arrivalLocation.toString(),
-            departureDate.toString(),
-            numberOfPassengers.toString()
-          );
-          setTrips(results);
-        } catch (error) {
-          console.error("Failed to fetch trips:", error);
-        }
-      }
+    const initialSearchData = {
+      departureLocation: searchParams.get("departureLocation"),
+      arrivalLocation: searchParams.get("arrivalLocation"),
+      departureDate: searchParams.get("departureDate"),
+      numberOfPassengers: searchParams.get("numberOfPassengers"),
     };
-
-    fetchTrips();
-  }, [departureLocation, arrivalLocation, departureDate, numberOfPassengers]);
+    fetchTrips(initialSearchData);
+  }, [searchParams]);
 
   useEffect(() => {
     sortAndFilterTrips();
-  }, [sortBy, startingTime, trips]);
+  }, [trips, sortBy, startingTime]);
 
   const sortAndFilterTrips = () => {
     let sorted = [...trips];
@@ -89,19 +103,18 @@ const SearchResults: React.FC = () => {
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartingTime(e.target.value);
   };
-  const handleTripSelect = (tripId: number) => {
-    push(`/pages/trip/details/${tripId}`);
-  };
 
   return (
-    <div className="container mx-auto py-6 px-4 max-w-3xl">
+    <div className="container mx-auto py-28 px-4 max-w-3xl">
+      <SearchForm onSearch={handleSearch} />
+
       <div className="bg-white rounded-lg shadow-md p-4 mb-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-secondary font-montserrat">
             Search Results
           </h2>
           <div className="flex items-center">
-            <span className="mr-2  text-gray-600 font-roboto text-bold">
+            <span className="mr-2 text-gray-600 font-roboto text-bold">
               Sort by:
             </span>
             {sortOptions.map((option) => (
@@ -121,6 +134,7 @@ const SearchResults: React.FC = () => {
             ))}
           </div>
         </div>
+
         <div className="flex items-center">
           <label className="inline-flex items-center text-base font-roboto text-secondary">
             <span className="mr-2">Starting time:</span>
@@ -141,22 +155,14 @@ const SearchResults: React.FC = () => {
       </div>
 
       <div className="space-y-3">
-        {filteredTrips.map((trip) => (
-          <TripCard
-            key={trip.id}
-            trip={trip}
-            onSelect={() => handleTripSelect(trip.id)}
-          />
-        ))}
+        {filteredTrips.length > 0 ? (
+          filteredTrips.map((trip) => (
+            <TripCard key={trip.id} trip={trip} onSelect={() => {}} />
+          ))
+        ) : (
+          <p className="text-center text-gray-500">No trips found</p>
+        )}
       </div>
-
-      {filteredTrips.length > 0 && (
-        <div className="mt-6 text-center">
-          <button className="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2 rounded-full hover:bg-opacity-90 transition duration-300">
-            Load more
-          </button>
-        </div>
-      )}
     </div>
   );
 };
