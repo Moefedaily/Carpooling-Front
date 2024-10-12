@@ -111,7 +111,7 @@ const SearchResults: React.FC = () => {
     setStartingTime(e.target.value);
   };
   const handleTripSelect = (tripId: number) => {
-    push(`pages/trip/details/${tripId}`);
+    push(`/pages/trip/details/${tripId}`);
   };
 
   return (
