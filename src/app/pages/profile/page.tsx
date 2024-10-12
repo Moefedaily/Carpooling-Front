@@ -11,7 +11,6 @@ import Modal from "@/app/components/ui/modal";
 import CarInfo from "@/app/components/ui/UserProfile/carInfo";
 import LicenseInfo from "@/app/components/ui/UserProfile/licenseInfo";
 import Header from "@/app/components/layout/Header";
-import Hero from "@/app/components/layout/Hero";
 import Footer from "@/app/components/layout/Footer";
 import EditProfileForm from "@/app/components/ui/UserProfile/EditProfileForm";
 import ChangePasswordForm from "@/app/components/ui/UserProfile/ChangePasswordForm";
@@ -91,8 +90,7 @@ const UserProfile = () => {
   return (
     <div className="bg-bg font-roboto">
       <Header />
-      <Hero title="Profile" image="/profile-hero.jpg" />
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-4 pt-28">
         <h1 className="text-2xl font-bold mb-6">My Profile</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

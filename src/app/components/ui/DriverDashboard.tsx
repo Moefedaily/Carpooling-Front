@@ -112,7 +112,7 @@ const DriverDashboard: React.FC = () => {
   });
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto pt-28 p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div className="bg-white p-4 rounded shadow">
           <h2 className="text-xl font-bold mb-2">Statistics</h2>
@@ -132,7 +132,7 @@ const DriverDashboard: React.FC = () => {
 
       <div className="mb-6">
         <h2 className="text-xl font-bold mb-2">Active and Upcoming Trips</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
           {activeTrips.map((trip) => (
             <DriverTripCard
               key={trip.id}

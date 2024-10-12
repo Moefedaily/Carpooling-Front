@@ -8,7 +8,6 @@ const SearchResultsPage: React.FC = () => {
   return (
     <div>
       <Header />
-      <Hero title="Search Results" image="/hero-image.jpg" />
       <SearchResults />
       <Footer />
     </div>

@@ -7,7 +7,6 @@ const DriverDashboardPage: React.FC = () => {
   return (
     <>
       <Header />
-      <Hero title="Driver Dashboard" image="/hero-image.jpg" />
       <DriverDashboard />
       <Footer />
     </>

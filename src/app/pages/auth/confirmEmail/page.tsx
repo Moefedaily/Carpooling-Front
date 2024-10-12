@@ -38,8 +38,7 @@ const ConfirmEmailContent = () => {
   return (
     <div>
       <Header />
-      <Hero title="Confirm Email" image="/confirm-email.jpg" />
-      <div className="container mx-auto py-12">
+      <div className="container mx-auto py-28 p-8">
         <div className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-6 text-center text-primary">
             Email Confirmation

@@ -8,8 +8,7 @@ const CreateTripPage: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <Hero title="Create Trip" image="/hero-image.jpg" />
-      <div className="text-3xl font-bold pt-12 text-center font-montserrat text-secondary ">
+      <div className="text-3xl font-bold pt-28 text-center font-montserrat text-secondary ">
         <h1>Create a New Trip</h1>
       </div>
       <div className="container mx-auto py-12">

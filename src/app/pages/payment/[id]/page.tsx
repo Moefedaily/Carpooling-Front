@@ -11,7 +11,6 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 const PaymentPageWithStripe = () => (
   <Elements stripe={stripePromise}>
     <Header />
-    <Hero title="Payment" image="/payment.jpg" />
     <PaymentPage />
     <Footer />
   </Elements>
