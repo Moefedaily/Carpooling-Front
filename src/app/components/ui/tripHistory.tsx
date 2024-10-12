@@ -2,12 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { TripService } from "@/app/services/trip";
-import { Trip, TripStatus } from "@/Utils/types/trip";
-import Header from "@/app/components/layout/Header";
-import Footer from "@/app/components/layout/Footer";
-import Hero from "@/app/components/layout/Hero";
 import Link from "next/link";
+import { Trip, TripStatus } from "@/Utils/types/trip";
+import Header from "../layout/Header";
+import Footer from "../layout/Footer";
+import { TripService } from "@/app/services/trip";
 
 const TripHistory: React.FC = () => {
   const [trips, setTrips] = useState<Trip[]>([]);

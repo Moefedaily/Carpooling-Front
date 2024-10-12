@@ -5,7 +5,6 @@ import { TripService } from "@/app/services/trip";
 import { conversationService } from "@/app/services/conversation";
 import { Trip } from "@/Utils/types/trip";
 import Header from "@/app/components/layout/Header";
-import Hero from "@/app/components/layout/Hero";
 import Footer from "@/app/components/layout/Footer";
 import {
   FaMapMarkerAlt,
@@ -21,7 +20,7 @@ import { Conversation } from "@/Utils/types/conversation";
 
 const TripDetailsPage = () => {
   const params = useParams();
-  const router = useRouter();
+  const { push } = useRouter();
   const id = params.id as string;
   const [trip, setTrip] = useState<Trip | null>(null);
   const [loading, setLoading] = useState(true);
@@ -49,9 +48,7 @@ const TripDetailsPage = () => {
 
   const handleMessageDriver = async () => {
     if (!isAuthenticated()) {
-      router.push(
-        "/login?redirect=" + encodeURIComponent(window.location.pathname)
-      );
+      push("/login?redirect=" + encodeURIComponent(window.location.pathname));
       return;
     }
 
@@ -72,9 +69,7 @@ const TripDetailsPage = () => {
   };
   const handleReserve = async () => {
     if (!isAuthenticated()) {
-      router.push(
-        "/login?redirect=" + encodeURIComponent(window.location.pathname)
-      );
+      push("/login?redirect=" + encodeURIComponent(window.location.pathname));
       return;
     }
 
@@ -86,7 +81,7 @@ const TripDetailsPage = () => {
           "Failed to create reservation: No reservation ID returned"
         );
       }
-      router.push(`/pages/payment/${response.reservation.id}`);
+      push(`/pages/payment/${response.reservation.id}`);
     } catch (err) {
       console.error("Error in handleReserve:", err);
       setError(
