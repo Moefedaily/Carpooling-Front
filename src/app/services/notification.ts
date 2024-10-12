@@ -13,4 +13,7 @@ export const NotificationService = {
   markNotificationAsRead: async (notificationId: number) => {
     return api.post(`/notifications/${notificationId}/read`);
   },
+  markAllNotificationsAsRead: async () => {
+    return api.post(`/notifications/read-all`);
+  },
 };

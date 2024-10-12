@@ -26,7 +26,6 @@ export const WebSocketHook = () => {
 
   useEffect(() => {
     const socket = getSocket();
-
     const fetchInitialData = async () => {
       try {
         const [
@@ -48,14 +47,11 @@ export const WebSocketHook = () => {
         console.error("Failed to fetch initial data:", error);
       }
     };
-
     fetchInitialData();
-
     if (socket) {
       socket.on("newMessage", handleNewMessage);
       socket.on("newNotification", handleNewNotification);
     }
-
     return () => {
       if (socket) {
         socket.off("newMessage", handleNewMessage);
@@ -82,6 +78,33 @@ export const WebSocketHook = () => {
     setUnreadNotificationCount(0);
   }, []);
 
+  const markAllMessagesAsRead = useCallback(async () => {
+    try {
+      await MessageService.markAllMessagesAsRead();
+      setRecentMessages((prevMessages) =>
+        prevMessages.map((message) => ({ ...message, isRead: true }))
+      );
+      setUnreadCount(0);
+    } catch (error) {
+      console.error("Failed to mark all messages as read:", error);
+    }
+  }, []);
+
+  const markAllNotificationsAsRead = useCallback(async () => {
+    try {
+      await NotificationService.markAllNotificationsAsRead();
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) => ({
+          ...notification,
+          isRead: true,
+        }))
+      );
+      setUnreadNotificationCount(0);
+    } catch (error) {
+      console.error("Failed to mark all notifications as read:", error);
+    }
+  }, []);
+
   return {
     unreadCount,
     recentMessages,
@@ -91,5 +114,7 @@ export const WebSocketHook = () => {
     unreadNotificationCount,
     markNotificationAsRead,
     resetUnreadNotificationCount,
+    markAllMessagesAsRead,
+    markAllNotificationsAsRead,
   };
 };

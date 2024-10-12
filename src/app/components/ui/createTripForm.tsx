@@ -46,7 +46,7 @@ const CreateTripForm: React.FC = () => {
         };
 
         await TripService.createTrip(formattedData);
-        router.push("/trips/driver");
+        router.push("/pages/driver/dashboard");
       } catch (error) {
         console.error("Failed to create trip:", error);
       }

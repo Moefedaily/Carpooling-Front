@@ -33,9 +33,12 @@ export const MessageService = {
     }
   },
 
-
   markMessageAsRead: async (messageId: number) => {
     return api.put(`/messages/${messageId}/read`);
+  },
+
+  markAllMessagesAsRead: async () => {
+    return api.put(`/messages/read-all`);
   },
 
   getUnreadMessageCount: async () => {

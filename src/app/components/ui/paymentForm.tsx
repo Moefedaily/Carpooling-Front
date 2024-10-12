@@ -133,7 +133,7 @@ const PaymentPage = () => {
   return (
     <div>
       <Header />
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto pt-28 p-8">
         <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-6 text-center text-primary">
             Complete Your Payment
