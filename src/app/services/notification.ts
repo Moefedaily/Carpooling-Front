@@ -14,6 +14,6 @@ export const NotificationService = {
     return api.post(`/notifications/${notificationId}/read`);
   },
   markAllNotificationsAsRead: async () => {
-    return api.put(`/notifications/read-all`);
+    return api.post(`/notifications/read-all`);
   },
 };
