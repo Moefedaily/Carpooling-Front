@@ -16,6 +16,7 @@ import EditProfileForm from "@/app/components/ui/UserProfile/EditProfileForm";
 import ChangePasswordForm from "@/app/components/ui/UserProfile/ChangePasswordForm";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { Oval } from "react-loader-spinner";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState<UserProfileResponse["data"] | null>(
@@ -82,10 +83,34 @@ const UserProfile = () => {
     toast.success("Password changed successfully");
   };
 
-  if (loading) return <div className="text-center py-4">Loading...</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Oval
+          height={40}
+          width={40}
+          color="#4E2B63"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          ariaLabel="oval-loading"
+          secondaryColor="#595959"
+          strokeWidth={2}
+          strokeWidthSecondary={2}
+        />
+      </div>
+    );
+
   if (error)
-    return <div className="text-center py-4 text-red-500">{error}</div>;
-  if (!userData) return <div className="text-center py-4">User not found</div>;
+    return (
+      <div className="flex justify-center items-center h-screen text-red font-montserrat font-lg">
+        {error}
+      </div>
+    );
+  if (!userData) return;
+  <div className="flex justify-center items-center h-screen text-primary font-montserrat text-lg">
+    User not found
+  </div>;
 
   return (
     <div className="bg-bg font-roboto">

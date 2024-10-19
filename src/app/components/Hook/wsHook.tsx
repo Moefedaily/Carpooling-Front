@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { getSocket } from "@/app/services/ws";
+import { getSocket, initializeSocket } from "@/app/services/ws";
 import { MessageService } from "@/app/services/messages";
 import { NotificationService } from "@/app/services/notification";
 import { Message } from "@/Utils/types/messages";
@@ -103,6 +103,19 @@ export const WebSocketHook = () => {
     } catch (error) {
       console.error("Failed to mark all notifications as read:", error);
     }
+  }, []);
+  useEffect(() => {
+    const checkConnection = setInterval(() => {
+      const socket = getSocket();
+      if (!socket || !socket.connected) {
+        const token = localStorage.getItem("token");
+        if (token) {
+          initializeSocket(token);
+        }
+      }
+    }, 2000);
+
+    return () => clearInterval(checkConnection);
   }, []);
 
   return {

@@ -129,7 +129,7 @@ const TripDetailsPage = () => {
 
   if (error)
     return (
-      <div className="flex justify-center items-center h-screen text-red font-montserrat font-lg">
+      <div className="flex justify-center items-center h-screen text-primary font-montserrat font-lg">
         {error}
       </div>
     );

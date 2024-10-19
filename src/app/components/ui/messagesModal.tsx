@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { MessageService } from "@/app/services/messages";
 import { Message } from "@/Utils/types/messages";
 import { Conversation } from "@/Utils/types/conversation";
+import { WebSocketHook } from "@/app/components/Hook/wsHook";
 
 interface MessageModalProps {
   isOpen: boolean;
@@ -20,14 +21,10 @@ const MessageModal: React.FC<MessageModalProps> = ({
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const { recentMessages } = WebSocketHook();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (conversation) {
-      fetchMessages();
-    }
-  }, [conversation]);
-
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     if (!conversation) return;
     try {
       const fetchedMessages = await MessageService.getMessagesForConversation(
@@ -37,7 +34,28 @@ const MessageModal: React.FC<MessageModalProps> = ({
     } catch (error) {
       console.error("Failed to fetch messages:", error);
     }
+  }, [conversation]);
+
+  useEffect(() => {
+    if (conversation) {
+      fetchMessages();
+    }
+  }, [conversation, fetchMessages]);
+
+  useEffect(() => {
+    if (recentMessages.length > 0) {
+      const newMessage = recentMessages[0];
+      if (newMessage.conversation.id === conversation?.id) {
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
+    }
+  }, [recentMessages, conversation]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(scrollToBottom, [messages]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +66,7 @@ const MessageModal: React.FC<MessageModalProps> = ({
           tripId,
           conversation.id
         );
-        setMessages([...messages, sentMessage]);
+        setMessages((prevMessages) => [...prevMessages, sentMessage]);
         setNewMessage("");
       } catch (error) {
         console.error("Failed to send message:", error);
@@ -63,9 +81,9 @@ const MessageModal: React.FC<MessageModalProps> = ({
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <h2 className="text-xl font-bold mb-4">Message Driver</h2>
         <div className="h-64 overflow-y-auto mb-4 border rounded p-2">
-          {messages.map((message) => (
+          {messages.map((message, index) => (
             <div
-              key={message.id}
+              key={`${message.id}-${index}`}
               className={`mb-2 ${
                 message.sender.id === currentUserId ? "text-right" : "text-left"
               }`}
@@ -81,6 +99,7 @@ const MessageModal: React.FC<MessageModalProps> = ({
               </span>
             </div>
           ))}
+          <div ref={messagesEndRef} />
         </div>
         <form onSubmit={handleSendMessage} className="flex">
           <input

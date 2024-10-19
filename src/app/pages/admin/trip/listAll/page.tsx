@@ -5,6 +5,7 @@ import { TripService } from "@/app/services/trip";
 import Header from "@/app/components/layout/Header";
 import Hero from "@/app/components/layout/Hero";
 import TripCard from "@/app/components/ui/tripCard";
+import { Oval } from "react-loader-spinner";
 
 const AvailableTrips: React.FC = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -29,9 +30,30 @@ const AvailableTrips: React.FC = () => {
     fetchTrips();
   }, []);
 
-  if (loading) return <div>Loading trips...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Oval
+          height={40}
+          width={40}
+          color="#4E2B63"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          ariaLabel="oval-loading"
+          secondaryColor="#595959"
+          strokeWidth={2}
+          strokeWidthSecondary={2}
+        />
+      </div>
+    );
 
+  if (error)
+    return (
+      <div className="flex justify-center items-center h-screen text-red font-montserrat font-lg">
+        {error}
+      </div>
+    );
   return (
     <div className="bg-bg font-roboto">
       <Header />
