@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { WebSocketHook } from "@/app/components/Hook/wsHook";
 import ConversationList from "@/app/components/ui/MessagesDropdown/Conversation/ConversationList";
 import ActiveConversation from "@/app/components/ui/MessagesDropdown/Conversation/ActiveConversation";
@@ -20,20 +20,7 @@ const MessagesPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { markAsRead, recentMessages } = WebSocketHook();
 
-  useEffect(() => {
-    fetchConversations();
-  }, []);
-
-  useEffect(() => {
-    if (activeConversation && recentMessages.length > 0) {
-      const newMessage = recentMessages[0];
-      if (newMessage.conversation.id === activeConversation.id) {
-        setMessages((prev) => [...prev, newMessage]);
-      }
-    }
-  }, [recentMessages, activeConversation]);
-
-  const fetchConversations = async () => {
+  const fetchConversations = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await conversationService.getConversationsForUser();
@@ -44,41 +31,70 @@ const MessagesPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const handleConversationClick = async (conversation: Conversation) => {
-    try {
-      setActiveConversation(conversation);
-      const messagesData = await MessageService.getMessagesForConversation(
-        conversation.id
-      );
-      setMessages(messagesData);
+  useEffect(() => {
+    fetchConversations();
+  }, [fetchConversations]);
 
-      const unreadMessages = messagesData.filter((msg: Message) => !msg.isRead);
-      for (const message of unreadMessages) {
-        await markAsRead(message.id);
+  useEffect(() => {
+    if (activeConversation && recentMessages.length > 0) {
+      const newMessage = recentMessages[0];
+      if (newMessage.conversation.id === activeConversation.id) {
+        setMessages((prev) => [...prev, newMessage]);
       }
-    } catch (err) {
-      setError("Failed to fetch messages");
-      console.error(err);
     }
-  };
+  }, [recentMessages, activeConversation]);
 
-  const handleSendMessage = async (content: string) => {
-    if (content.trim() && activeConversation) {
+  const handleConversationClick = useCallback(
+    async (conversation: Conversation) => {
       try {
-        const sentMessage = await MessageService.createMessage(
-          content,
-          activeConversation.trip.id,
-          activeConversation.id
+        setActiveConversation(conversation);
+        const messagesData = await MessageService.getMessagesForConversation(
+          conversation.id
         );
-        setMessages((prev) => [...prev, sentMessage]);
+        setMessages(messagesData);
+        const unreadMessages = messagesData.filter(
+          (msg: Message) => !msg.isRead
+        );
+        for (const message of unreadMessages) {
+          await markAsRead(message.id);
+        }
       } catch (err) {
-        setError("Failed to send message");
+        setError("Failed to fetch messages");
         console.error(err);
       }
-    }
-  };
+    },
+    [markAsRead]
+  );
+
+  const handleSendMessage = useCallback(
+    async (content: string) => {
+      if (content.trim() && activeConversation) {
+        try {
+          const sentMessage = await MessageService.createMessage(
+            content,
+            activeConversation.trip.id,
+            activeConversation.id
+          );
+          setMessages((prev) => [...prev, sentMessage]);
+          // Update the conversation
+          setConversations((prevConversations) =>
+            prevConversations.map((conv) =>
+              conv.id === activeConversation.id
+                ? { ...conv, lastMessage: sentMessage }
+                : conv
+            )
+          );
+        } catch (err) {
+          setError("Failed to send message");
+          console.error(err);
+        }
+      }
+    },
+    [activeConversation]
+  );
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
