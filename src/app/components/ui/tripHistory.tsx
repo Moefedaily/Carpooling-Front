@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { Trip, TripStatus } from "@/Utils/types/trip";
-import Header from "../layout/Header";
-import Footer from "../layout/Footer";
 import { TripService } from "@/app/services/trip";
+import { Trip, TripStatus } from "@/Utils/types/trip";
+import Header from "@/app/components/layout/Header";
+import Footer from "@/app/components/layout/Footer";
+import Link from "next/link";
 
 const TripHistory: React.FC = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -55,7 +55,7 @@ const TripHistory: React.FC = () => {
   });
 
   return (
-    <div className="bg-bg font-roboto">
+    <div>
       <Header />
       <div className="container mx-auto p-4 pt-28">
         <h1 className="text-2xl font-bold mb-6">Trip History</h1>

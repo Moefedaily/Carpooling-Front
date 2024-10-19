@@ -44,7 +44,7 @@ const SearchResults: React.FC = () => {
         );
         console.log("Fetched trips:", results);
         setTrips(results);
-        setFilteredTrips(results); 
+        setFilteredTrips(results);
       } catch (error) {
         console.error("Failed to fetch trips:", error);
       }
