@@ -28,7 +28,6 @@ const DriverDashboard: React.FC = () => {
       );
 
       setStats({ totalTrips, totalEarnings });
-      console.log("Stats set:", { totalTrips, totalEarnings });
     };
 
     fetchTrips();

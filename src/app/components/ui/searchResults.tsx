@@ -35,18 +35,15 @@ const SearchResults: React.FC = () => {
       numberOfPassengers
     ) {
       try {
-        console.log("Fetching trips with:", searchData);
         const results = await TripService.searchTrips(
           departureLocation,
           arrivalLocation,
           departureDate,
           numberOfPassengers
         );
-        console.log("Fetched trips:", results);
         setTrips(results);
         setFilteredTrips(results);
       } catch (error) {
-        console.error("Failed to fetch trips:", error);
       }
     } else {
       console.log("Invalid search data:", searchData);
