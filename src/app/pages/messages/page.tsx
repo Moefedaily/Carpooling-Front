@@ -78,7 +78,6 @@ const MessagesPage: React.FC = () => {
             activeConversation.id
           );
           setMessages((prev) => [...prev, sentMessage]);
-          // Update the conversation
           setConversations((prevConversations) =>
             prevConversations.map((conv) =>
               conv.id === activeConversation.id

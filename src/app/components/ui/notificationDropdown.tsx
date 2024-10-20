@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Notification } from "@/Utils/types/notifications";
 import { format } from "date-fns";
 import { WebSocketHook } from "../Hook/wsHook";
+import { Oval } from "react-loader-spinner";
 
 interface NotificationsDropdownProps {
   isOpen: boolean;
@@ -70,7 +71,20 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
       </div>
       <div className="max-h-96 overflow-y-auto">
         {isLoading ? (
-          <div className="p-4 text-center">Loading notifications...</div>
+          <div className="flex justify-center items-center h-screen">
+            <Oval
+              height={40}
+              width={40}
+              color="#4E2B63"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+              ariaLabel="oval-loading"
+              secondaryColor="#595959"
+              strokeWidth={2}
+              strokeWidthSecondary={2}
+            />
+          </div>
         ) : notifications.length > 0 ? (
           notifications.map(renderNotification)
         ) : (

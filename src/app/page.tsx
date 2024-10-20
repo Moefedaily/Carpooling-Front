@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { isAuthenticated, getUser } from "@/app/services/auth";
+import { Oval } from "react-loader-spinner";
 
 export default function Home() {
   const { push } = useRouter();
@@ -32,7 +33,20 @@ export default function Home() {
           height={38}
           priority
         />
-        <p className="text-center">Redirecting...</p>
+        <div className="flex justify-center items-center h-screen">
+          <Oval
+            height={40}
+            width={40}
+            color="#4E2B63"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+            ariaLabel="oval-loading"
+            secondaryColor="#595959"
+            strokeWidth={2}
+            strokeWidthSecondary={2}
+          />
+        </div>{" "}
       </main>
     </div>
   );
