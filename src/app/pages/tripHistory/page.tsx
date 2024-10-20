@@ -35,9 +35,26 @@ const TripHistory: React.FC = () => {
     fetchTrips();
   }, [role]);
 
-  const handleLeaveTrip = async (tripId: number) => {
+  const handleLeaveTrip = async (trip: Trip) => {
+    console.debug(`trips obejct ${JSON.stringify(trips)}`);
+    if (!trip.reservations || trip.reservations.length === 0) {
+      toast.error("No reservation found for this trip");
+      return;
+    }
+
+    const reservation = trip.reservations[0];
+    if (
+      reservation.status === "PENDING" ||
+      reservation.status === "CONFIRMED"
+    ) {
+      toast.error(
+        "Cannot leave trip with pending or completed payment. Please contact support."
+      );
+      return;
+    }
+
     try {
-      await TripService.leaveTrip(tripId);
+      await TripService.leaveTrip(trip.id);
       toast.success("Successfully left the trip");
       fetchTrips();
     } catch (error) {
@@ -117,12 +134,24 @@ const TripHistory: React.FC = () => {
                 {role === "passenger" &&
                   (trip.status === TripStatus.CONFIRMED ||
                     trip.status === TripStatus.PENDING) && (
-                    <button
-                      onClick={() => handleLeaveTrip(trip.id)}
-                      className="mt-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
-                    >
-                      Leave Trip
-                    </button>
+                    <>
+                      {trip.reservations &&
+                      trip.reservations[0] &&
+                      (trip.reservations[0].status === "PENDING" ||
+                        trip.reservations[0].status === "CONFIRMED") ? (
+                        <p className="mt-2 text-red-500">
+                          Cannot leave trip with pending or completed payment.
+                          Please contact support.
+                        </p>
+                      ) : (
+                        <button
+                          onClick={() => handleLeaveTrip(trip)}
+                          className="mt-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                        >
+                          Leave Trip
+                        </button>
+                      )}
+                    </>
                   )}
               </div>
             ))}

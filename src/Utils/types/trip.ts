@@ -3,13 +3,12 @@ import { User } from "./user";
 
 export enum TripStatus {
   PENDING = "PENDING",
-  CONFIRMED = "CONFIRMED", 
+  CONFIRMED = "CONFIRMED",
   START = "START",
-  IN_PROGRESS = "IN_PROGRESS",  
-  COMPLETED = "COMPLETED",  
-  CANCELLED = "CANCELLED" 
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED",
 }
-
 
 export interface Trip {
   id: number;
@@ -24,6 +23,7 @@ export interface Trip {
   driver: User;
   car: Car;
   passengers: User[];
+  reservations: Reservation[];
 }
 
 export interface CreateTripData {
