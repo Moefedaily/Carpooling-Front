@@ -43,15 +43,17 @@ export const isAuthenticated = () => {
   return isBrowser ? !!localStorage.getItem("token") : false;
 };
 export const getUser = () => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    //console.log("user " + JSON.stringify((JSON.parse(window.atob(base64)))));
-    return JSON.parse(window.atob(base64));
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      return JSON.parse(window.atob(base64));
+    }
   }
   return null;
 };
+
 
 export const getUserId = () => {
   const user = getUser();
