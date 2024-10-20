@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { TripService } from "@/app/services/trip";
 import { Trip, TripStatus } from "@/Utils/types/trip";
@@ -35,7 +36,7 @@ const TripHistory: React.FC = () => {
   }, [role]);
 
   const handleLeaveTrip = async (trip: Trip) => {
-    console.log(`trip is ${trip}`);
+    console.debug(`trips obejct ${JSON.stringify(trips)}`);
     if (!trip.reservations || trip.reservations.length === 0) {
       toast.error("No reservation found for this trip");
       return;
@@ -44,7 +45,7 @@ const TripHistory: React.FC = () => {
     const reservation = trip.reservations[0];
     if (
       reservation.status === "PENDING" ||
-      reservation.status === "COMPLETED"
+      reservation.status === "CONFIRMED"
     ) {
       toast.error(
         "Cannot leave trip with pending or completed payment. Please contact support."
@@ -137,7 +138,7 @@ const TripHistory: React.FC = () => {
                       {trip.reservations &&
                       trip.reservations[0] &&
                       (trip.reservations[0].status === "PENDING" ||
-                        trip.reservations[0].status === "COMPLETED") ? (
+                        trip.reservations[0].status === "CONFIRMED") ? (
                         <p className="mt-2 text-red-500">
                           Cannot leave trip with pending or completed payment.
                           Please contact support.
