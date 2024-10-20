@@ -9,8 +9,17 @@ import { useRouter } from "next/navigation";
 import { getUser } from "@/app/services/auth";
 import toast from "react-hot-toast";
 
+interface ReservationStatus {
+  status: "pending" | "confirmed" | "cancelled";
+  isPaid: boolean;
+}
+
+interface ExtendedTrip extends Trip {
+  reservation?: ReservationStatus;
+}
+
 const TripHistory: React.FC = () => {
-  const [trips, setTrips] = useState<Trip[]>([]);
+  const [trips, setTrips] = useState<ExtendedTrip[]>([]);
   const [role, setRole] = useState<"passenger" | "driver">("passenger");
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -19,7 +28,7 @@ const TripHistory: React.FC = () => {
   const fetchTrips = async () => {
     setIsLoading(true);
     try {
-      const fetchedTrips =
+      const fetchedTrips: ExtendedTrip[] =
         role === "passenger"
           ? await TripService.getPassengerTrips()
           : await TripService.getDriverTrips();
@@ -62,14 +71,18 @@ const TripHistory: React.FC = () => {
     }
   };
 
-  const nonActiveTrips = trips.filter((trip) => {
-    const isActive = [TripStatus.CANCELLED, TripStatus.COMPLETED].includes(
-      trip.status as TripStatus
-    );
-    return isActive;
-  });
+  const canLeaveTrip = (trip: ExtendedTrip) => {
+    return trip.reservation && trip.reservation.status === "pending";
+  };
 
-  const displayTrips = role === "driver" ? nonActiveTrips : trips;
+  const displayTrips =
+    role === "driver"
+      ? trips.filter(
+          (trip) =>
+            trip.status === TripStatus.CANCELLED ||
+            trip.status === TripStatus.COMPLETED
+        )
+      : trips;
 
   return (
     <div className="bg-bg font-roboto">
@@ -114,16 +127,14 @@ const TripHistory: React.FC = () => {
                       (trip.car.numberOfSeats - trip.availableSeats)}
                   </p>
                 )}
-                {role === "passenger" &&
-                  (trip.status === TripStatus.CONFIRMED ||
-                    trip.status === TripStatus.PENDING) && (
-                    <button
-                      onClick={() => handleLeaveTrip(trip.id)}
-                      className="mt-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
-                    >
-                      Leave Trip
-                    </button>
-                  )}
+                {role === "passenger" && canLeaveTrip(trip) && (
+                  <button
+                    onClick={() => handleLeaveTrip(trip.id)}
+                    className="mt-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                  >
+                    Leave Trip
+                  </button>
+                )}
               </div>
             ))}
           </div>
