@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/app/services/auth";
 import toast from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
 
 const TripHistory: React.FC = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -111,7 +112,20 @@ const TripHistory: React.FC = () => {
           </button>
         </div>
         {isLoading ? (
-          <p>Loading trips...</p>
+          <div className="flex justify-center items-center h-screen">
+            <Oval
+              height={40}
+              width={40}
+              color="#4E2B63"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+              ariaLabel="oval-loading"
+              secondaryColor="#595959"
+              strokeWidth={2}
+              strokeWidthSecondary={2}
+            />
+          </div>
         ) : displayTrips.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {displayTrips.map((trip) => (
