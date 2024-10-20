@@ -90,7 +90,6 @@ const TripHistory: React.FC = () => {
 
   return (
     <div className="bg-bg font-roboto">
-      <Header />
       <div className="container mx-auto p-4 pt-28">
         <h1 className="text-2xl font-bold mb-6">Trip History</h1>
         <div className="mb-4">
@@ -176,7 +175,6 @@ const TripHistory: React.FC = () => {
           </Link>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
