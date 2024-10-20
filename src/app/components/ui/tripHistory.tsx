@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import { TripService } from "@/app/services/trip";
 import { Trip, TripStatus } from "@/Utils/types/trip";
@@ -9,16 +8,8 @@ import { useRouter } from "next/navigation";
 import { getUser } from "@/app/services/auth";
 import toast from "react-hot-toast";
 
-interface ReservationStatus {
-  status: "pending" | "cancelled";
-}
-
-interface ExtendedTrip extends Trip {
-  reservation?: ReservationStatus;
-}
-
 const TripHistory: React.FC = () => {
-  const [trips, setTrips] = useState<ExtendedTrip[]>([]);
+  const [trips, setTrips] = useState<Trip[]>([]);
   const [role, setRole] = useState<"passenger" | "driver">("passenger");
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -27,7 +18,7 @@ const TripHistory: React.FC = () => {
   const fetchTrips = async () => {
     setIsLoading(true);
     try {
-      const fetchedTrips: ExtendedTrip[] =
+      const fetchedTrips =
         role === "passenger"
           ? await TripService.getPassengerTrips()
           : await TripService.getDriverTrips();
@@ -43,9 +34,25 @@ const TripHistory: React.FC = () => {
     fetchTrips();
   }, [role]);
 
-  const handleLeaveTrip = async (tripId: number) => {
+  const handleLeaveTrip = async (trip: Trip) => {
+    if (!trip.reservations || trip.reservations.length === 0) {
+      toast.error("No reservation found for this trip");
+      return;
+    }
+
+    const reservation = trip.reservations[0];
+    if (
+      reservation.status === "PENDING" ||
+      reservation.status === "COMPLETED"
+    ) {
+      toast.error(
+        "Cannot leave trip with pending or completed payment. Please contact support."
+      );
+      return;
+    }
+
     try {
-      await TripService.leaveTrip(tripId);
+      await TripService.leaveTrip(trip.id);
       toast.success("Successfully left the trip");
       fetchTrips();
     } catch (error) {
@@ -70,18 +77,14 @@ const TripHistory: React.FC = () => {
     }
   };
 
-  const canLeaveTrip = (trip: ExtendedTrip) => {
-    return trip.reservation && trip.reservation.status === "pending";
-  };
+  const nonActiveTrips = trips.filter((trip) => {
+    const isActive = [TripStatus.CANCELLED, TripStatus.COMPLETED].includes(
+      trip.status as TripStatus
+    );
+    return isActive;
+  });
 
-  const displayTrips =
-    role === "driver"
-      ? trips.filter(
-          (trip) =>
-            trip.status === TripStatus.CANCELLED ||
-            trip.status === TripStatus.COMPLETED
-        )
-      : trips;
+  const displayTrips = role === "driver" ? nonActiveTrips : trips;
 
   return (
     <div className="bg-bg font-roboto">
@@ -126,14 +129,28 @@ const TripHistory: React.FC = () => {
                       (trip.car.numberOfSeats - trip.availableSeats)}
                   </p>
                 )}
-                {role === "passenger" && canLeaveTrip(trip) && (
-                  <button
-                    onClick={() => handleLeaveTrip(trip.id)}
-                    className="mt-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
-                  >
-                    Leave Trip
-                  </button>
-                )}
+                {role === "passenger" &&
+                  (trip.status === TripStatus.CONFIRMED ||
+                    trip.status === TripStatus.PENDING) && (
+                    <>
+                      {trip.reservations &&
+                      trip.reservations[0] &&
+                      (trip.reservations[0].status === "PENDING" ||
+                        trip.reservations[0].status === "COMPLETED") ? (
+                        <p className="mt-2 text-red-500">
+                          Cannot leave trip with pending or completed payment.
+                          Please contact support.
+                        </p>
+                      ) : (
+                        <button
+                          onClick={() => handleLeaveTrip(trip)}
+                          className="mt-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                        >
+                          Leave Trip
+                        </button>
+                      )}
+                    </>
+                  )}
               </div>
             ))}
           </div>
