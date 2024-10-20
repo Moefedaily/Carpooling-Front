@@ -35,6 +35,7 @@ const TripHistory: React.FC = () => {
   }, [role]);
 
   const handleLeaveTrip = async (trip: Trip) => {
+    console.log(`trip is ${trip}`);
     if (!trip.reservations || trip.reservations.length === 0) {
       toast.error("No reservation found for this trip");
       return;
