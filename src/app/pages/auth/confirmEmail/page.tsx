@@ -2,7 +2,7 @@ import ConfirmEmailContent from "@/app/components/ui/confirmEmail";
 import React, { Suspense } from "react";
 import { Oval } from "react-loader-spinner";
 
-export default function ConfirmEmail() {
+export default function ConfirmEmailPage() {
   return (
     <Suspense
       fallback={
