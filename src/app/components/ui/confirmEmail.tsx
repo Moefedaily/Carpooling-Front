@@ -3,12 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-import Header from "@/app/components/layout/Header";
-import Hero from "@/app/components/layout/Hero";
-import Footer from "@/app/components/layout/Footer";
 import { confirmEmail } from "@/app/services/auth";
 
-const ConfirmEmailContent = () => {
+const ConfirmEmailClient = () => {
   const [message, setMessage] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -20,7 +17,6 @@ const ConfirmEmailContent = () => {
         setMessage("No confirmation token found.");
         return;
       }
-
       try {
         const response = await confirmEmail(token);
         setMessage(response.message || "Email confirmed successfully");
@@ -31,27 +27,19 @@ const ConfirmEmailContent = () => {
         toast.error("Failed to confirm email. Please try again.");
       }
     };
-
     runConfirmEmail();
   }, [token, router]);
 
   return (
-    <div>
-      <Header />
-      <Hero title="Confirm Email" image="/confirm-email.jpg" />
-      <div className="container mx-auto py-12">
-        <div className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-6 text-center text-primary">
-            Email Confirmation
-          </h2>
-          <p className="text-center text-gray-600">
-            {message || "Confirming your email..."}
-          </p>
-        </div>
-      </div>
-      <Footer />
+    <div className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
+      <h2 className="text-2xl font-bold mb-6 text-center text-primary">
+        Email Confirmation
+      </h2>
+      <p className="text-center text-gray-600">
+        {message || "Confirming your email..."}
+      </p>
     </div>
   );
 };
 
-export default ConfirmEmailContent;
+export default ConfirmEmailClient;
