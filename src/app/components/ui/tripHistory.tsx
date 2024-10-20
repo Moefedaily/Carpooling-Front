@@ -1,34 +1,49 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import { TripService } from "@/app/services/trip";
 import { Trip, TripStatus } from "@/Utils/types/trip";
 import Header from "@/app/components/layout/Header";
 import Footer from "@/app/components/layout/Footer";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { getUser } from "@/app/services/auth";
+import toast from "react-hot-toast";
 
 const TripHistory: React.FC = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [role, setRole] = useState<"passenger" | "driver">("passenger");
-  const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+  const user = getUser();
 
-  useEffect(() => {
-    const fetchTrips = async () => {
+  const fetchTrips = async () => {
+    setIsLoading(true);
+    try {
       const fetchedTrips =
         role === "passenger"
           ? await TripService.getPassengerTrips()
           : await TripService.getDriverTrips();
       setTrips(fetchedTrips);
-    };
-
-    const roleParam = searchParams.get("role");
-    if (roleParam === "driver") {
-      setRole("driver");
+    } catch (error) {
+      toast.error(`Failed to fetch ${role} trips`);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
+  useEffect(() => {
     fetchTrips();
-  }, [role, searchParams]);
+  }, [role]);
+
+  const handleLeaveTrip = async (tripId: number) => {
+    try {
+      await TripService.leaveTrip(tripId);
+      toast.success("Successfully left the trip");
+      fetchTrips();
+    } catch (error) {
+      toast.error("Failed to leave the trip");
+    }
+  };
 
   const getStatusColor = (status: TripStatus) => {
     switch (status) {
@@ -54,12 +69,13 @@ const TripHistory: React.FC = () => {
     return isActive;
   });
 
+  const displayTrips = role === "driver" ? nonActiveTrips : trips;
+
   return (
-    <div>
+    <div className="bg-bg font-roboto">
       <Header />
       <div className="container mx-auto p-4 pt-28">
         <h1 className="text-2xl font-bold mb-6">Trip History</h1>
-
         <div className="mb-4">
           <button
             onClick={() => setRole("passenger")}
@@ -78,33 +94,58 @@ const TripHistory: React.FC = () => {
             As Driver
           </button>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {nonActiveTrips.map((trip) => (
-            <div key={trip.id} className="bg-white p-4 rounded shadow">
-              <h3 className="font-semibold">
-                {trip.departureLocation} → {trip.arrivalLocation}
-              </h3>
-              <p>Date: {new Date(trip.departureDate).toLocaleDateString()}</p>
-              <p className={`font-medium ${getStatusColor(trip.status)}`}>
-                Status: {trip.status}
-              </p>
-              {role === "driver" && trip.car && (
-                <p>
-                  Earnings: $
-                  {trip.pricePerSeat *
-                    (trip.car.numberOfSeats - trip.availableSeats)}
+        {isLoading ? (
+          <p>Loading trips...</p>
+        ) : displayTrips.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {displayTrips.map((trip) => (
+              <div key={trip.id} className="bg-white p-4 rounded shadow">
+                <h3 className="font-semibold">
+                  {trip.departureLocation} → {trip.arrivalLocation}
+                </h3>
+                <p>Date: {new Date(trip.departureDate).toLocaleDateString()}</p>
+                <p className={`font-medium ${getStatusColor(trip.status)}`}>
+                  Status: {trip.status}
                 </p>
-              )}
-            </div>
-          ))}
+                {role === "driver" && trip.car && (
+                  <p>
+                    Earnings: $
+                    {trip.pricePerSeat *
+                      (trip.car.numberOfSeats - trip.availableSeats)}
+                  </p>
+                )}
+                {role === "passenger" &&
+                  (trip.status === TripStatus.CONFIRMED ||
+                    trip.status === TripStatus.PENDING) && (
+                    <button
+                      onClick={() => handleLeaveTrip(trip.id)}
+                      className="mt-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                    >
+                      Leave Trip
+                    </button>
+                  )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No trips found.</p>
+        )}
+        <div className="mt-4">
+          {user?.isVerifiedDriver && (
+            <Link
+              href="/pages/driver/dashboard"
+              className="inline-block text-primary hover:underline mr-4"
+            >
+              Back to Dashboard
+            </Link>
+          )}
+          <Link
+            href="/pages/profile"
+            className="inline-block text-primary hover:underline"
+          >
+            Back to Profile
+          </Link>
         </div>
-        <Link
-          href="/pages/driver/dashboard"
-          className="mt-4 inline-block text-primary hover:underline"
-        >
-          Back to Dashboard
-        </Link>
       </div>
       <Footer />
     </div>
