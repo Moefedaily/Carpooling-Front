@@ -10,8 +10,7 @@ import { getUser } from "@/app/services/auth";
 import toast from "react-hot-toast";
 
 interface ReservationStatus {
-  status: "pending" | "confirmed" | "cancelled";
-  isPaid: boolean;
+  status: "pending" | "cancelled";
 }
 
 interface ExtendedTrip extends Trip {
